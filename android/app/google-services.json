@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "49738111599",
+    "project_id": "trashsmartlogin",
+    "storage_bucket": "trashsmartlogin.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49738111599:android:88546c90d58d5096d44b9a",
+        "android_client_info": {
+          "package_name": "com.example.trashsmart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "49738111599-669m3k4l5ctu3ej06g3tc3tebk8rl72l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.trashsmart",
+            "certificate_hash": "80968a8b70d5292d28d0eed2c0f6d4e11821fbc8"
+          }
+        },
+        {
+          "client_id": "49738111599-57vls1lstkl2ahm99lanigv7quabe7aa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKhxtps012kgH379kQ9h2O77MadDzOEBY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "49738111599-57vls1lstkl2ahm99lanigv7quabe7aa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

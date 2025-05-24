@@ -7,9 +7,6 @@ import 'package:trashsmart/data/model/request/login_request_model.dart';
 import 'package:trashsmart/data/model/request/register_request_model.dart';
 import 'package:trashsmart/data/model/response/auth_response_model.dart';
 import 'package:trashsmart/core/constants/variable.dart';
-import 'package:dartz/dartz.dart';
-import 'package:trashsmart/data/model/response/auth_response_model.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:trashsmart/data/model/response/avatar_response_model.dart';
@@ -204,5 +201,19 @@ Future<Either<String, List<Avatar>>> getAvatars() async {
       return Left('Terjadi kesalahan: ${e.toString()}');
     }
   }
+  
+  Future<int> getTotalDonasi() async {
+  final authData = await AuthLocalDatasource().getAuthData();
+  final token = authData.token;
+  final response = await http.get(
+    Uri.parse('${Variable.baseUrl}/api/user/total-donasi'),
+    headers: {'Authorization': 'Bearer $token'},
+  );
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return data['total'] ?? 0;
+  }
+  return 0;
+}
 
 }

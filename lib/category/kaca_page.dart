@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_state.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_event.dart';
+import 'package:trashsmart/data/datasource/bank_remote_datasource.dart';
 import 'package:trashsmart/widget/form_diri.dart';
 
 class KacaDetailPage extends StatefulWidget {
@@ -13,142 +18,153 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Informasi Kategori"),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF00973A),
-        foregroundColor: Colors.white,
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Kaca",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildArtikel(),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        height: 2,
-                        color: const Color(0xFFEEEEEE),
-                      ),
-                      const SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 600),
+    return BlocProvider(
+      create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Informasi Kategori"),
+          centerTitle: true,
+          backgroundColor: const Color(0xFF00973A),
+          foregroundColor: Colors.white,
+        ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  "Pilih Bank Sampah Kami",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                              const Text(
+                                "Kaca",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 0,
-                                nama: "Bank Sampah Kaca Cemerlang",
-                                alamat:
-                                    "Jl. Raya Jonggol-Dayeuh No.19, Sukasirna Kec. jonggol Kab. Bogor Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 1,
-                                nama: "Bank Sampah Recycle Glass",
-                                alamat:
-                                    "Singajaya, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 2,
-                                nama: "Bank Sampah Hijau",
-                                alamat:
-                                    "kp Jl. Pojok Salak No.02/08, Jonggol, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 24),
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: selectedBankIndex != null
-                                      ? () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const FormPage(
-                                                      kategoriTerpilih: 'Kaca'),
-                                            ),
-                                          );
-                                        }
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(
-                                            const Color(0xFF00973A)),
-                                    foregroundColor:
-                                        MaterialStateProperty.all(
-                                            Colors.white),
-                                    padding: MaterialStateProperty.all(
-                                      const EdgeInsets.symmetric(
-                                          vertical: 16),
-                                    ),
-                                    shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    elevation:
-                                        MaterialStateProperty.resolveWith<double>(
-                                      (states) => states.contains(
-                                              MaterialState.disabled)
-                                          ? 0
-                                          : 4,
-                                    ),
-                                    shadowColor: MaterialStateProperty.all(
-                                      Colors.grey.withOpacity(0.4),
-                                    ),
-                                  ),
-                                  child: const Text("Donasi Sekarang"),
-                                ),
-                              ),
-                              const SizedBox(height: 16), // Tambahan jarak bawah tombol
+                              const SizedBox(height: 16),
+                              _buildArtikel(),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          width: double.infinity,
+                          height: 2,
+                          color: const Color(0xFFEEEEEE),
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    "Pilih Bank Sampah Kami",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                BlocBuilder<BankBloc, BankState>(
+                                  builder: (context, state) {
+                                    if (state.isLoading) {
+                                      return const Center(child: CircularProgressIndicator());
+                                    }
+                                    if (state.errorMessage != null) {
+                                      return Center(child: Text('Error: ${state.errorMessage}'));
+                                    }
+                                    final bankList = state.bankList;
+                                    if (bankList.isEmpty) {
+                                      return const Center(child: Text('Belum ada data bank sampah.'));
+                                    }
+                                    return Column(
+                                      children: [
+                                        ...List.generate(bankList.length, (index) {
+                                          final bank = bankList[index];
+                                          return Column(
+                                            children: [
+                                              _buildBankSampahItem(
+                                                index: index,
+                                                nama: bank.bankSampahNama ?? '-',
+                                                alamat: bank.bankSampahAlamat ?? '-',
+                                                imagePath: "assets/images/map.png",
+                                              ),
+                                              const SizedBox(height: 12),
+                                            ],
+                                          );
+                                        }),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            onPressed: selectedBankIndex != null
+                                                ? () {
+                                                    final selectedBank = bankList[selectedBankIndex!];
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => FormPage(
+                                                          kategoriTerpilih: 'Kaca',
+                                                          bankSampahNama: selectedBank.bankSampahNama ?? '-',
+                                                          bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                : null,
+                                            style: ButtonStyle(
+                                              backgroundColor: MaterialStateProperty.all(
+                                                const Color(0xFF00973A),
+                                              ),
+                                              foregroundColor: MaterialStateProperty.all(
+                                                Colors.white,
+                                              ),
+                                              padding: MaterialStateProperty.all(
+                                                const EdgeInsets.symmetric(vertical: 16),
+                                              ),
+                                              shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              elevation: MaterialStateProperty.resolveWith<double>(
+                                                (states) => states.contains(MaterialState.disabled) ? 0 : 4,
+                                              ),
+                                              shadowColor: MaterialStateProperty.all(
+                                                Colors.grey.withOpacity(0.4),
+                                              ),
+                                            ),
+                                            child: const Text("Donasi Sekarang"),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -158,15 +174,17 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
       children: [
         Card(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               ClipRRect(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12)),
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
                 child: Image(
                   image: AssetImage('assets/kategori/kacaa.png'),
                   width: double.infinity,
@@ -176,7 +194,7 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  "♻ Sampah Kaca: Rapuh Tapi Bernilai Tinggi Jika Didaur Ulang",
+                  "♻️ Sampah Kaca: Rapuh Tapi Bernilai Tinggi Jika Didaur Ulang",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -184,43 +202,60 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
           ),
         ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Manfaat Daur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("1. Kurangi Pencemaran\n2. Kurangi Sampah di TPA\n3. Hemat Sumber Daya\n4. Hemat Energi\n5. Bantu Ekonomi Sirkular\n6. Kurangi Emisi Karbon"),
-          SizedBox(height: 8),
-          Text("Yang Bisa Didaur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Text("• Botol kaca, toples, pecahan kaca"),
-          SizedBox(height: 8),
-          Text("Yang Sulit Didaur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Text("• Cermin, oven glass, lampu neon\n⚠ Bungkus pecahan kaca agar aman!"),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text("Daur Ulang Sampah Kaca:"),
+            SizedBox(height: 8),
+            Text(
+              "Yang Bisa Didaur Ulang:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text("• Botol kaca (sirup, minuman, kecap)"),
+            Text("• Toples kaca (kopi, madu, selai)"),
+            Text("• Pecahan kaca bening/berwarna"),
+            SizedBox(height: 8),
+            Text(
+              "Yang Sulit Didaur Ulang:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text("• Cermin, kaca oven/microwave"),
+            Text("• Bohlam & lampu neon"),
+            Text("• Kaca bercampur logam/plastik"),
+            SizedBox(height: 8),
+            Text(
+              "⚠ Pisahkan dan bungkus pecahan agar aman!",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Cara Mengelola",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("• Cuci bersih, bungkus, simpan kering\n• Drop-off ke bank sampah kaca"),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Cara Mengelola:",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text("• Cuci bersih"),
+            Text("• Bungkus pecahan dengan\n  kertas/koran"),
+            Text("• Simpan kering dan aman"),
+            Text("• Drop-off ke bank sampah kaca"),
+          ],
+        ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Manfaatnya",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("✅ Hemat energi hingga 30%\n✅ Kurangi limbah berat\n✅ Bisa didaur ulang terus-menerus"),
-        ]),
-        const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Hasil Daur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("• Botol baru, ubin, bahan bangunan\n• Kerajinan seperti mozaik & vas"),
-          SizedBox(height: 8),
-          Text("Yuk, kelola sampah kaca dengan bijak!"),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Donasikan botol dan pecahan kaca, dapatkan Rp1.000/kg dan selamatkan lingkungan!\"",
+              style: TextStyle(fontWeight: FontWeight.normal),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Yuk, Donasikan Sekarang!",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -277,8 +312,7 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                     child: Image.asset(
                       imagePath,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Container(
+                      errorBuilder: (context, error, stackTrace) => Container(
                         color: Colors.grey[300],
                         child: const Icon(Icons.error, color: Colors.red),
                       ),
@@ -294,7 +328,9 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                           Text(
                             nama,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(alamat, style: const TextStyle(fontSize: 12)),

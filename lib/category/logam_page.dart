@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_state.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_event.dart';
+import 'package:trashsmart/data/datasource/bank_remote_datasource.dart';
 import 'package:trashsmart/widget/form_diri.dart';
 
 class LogamDetailPage extends StatefulWidget {
@@ -13,144 +18,151 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Informasi Kategori"),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF00973A),
-        foregroundColor: Colors.white,
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "LOGAM",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildArtikel(),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-
-                      // Divider full width (di luar padding!)
-                      Container(
-                        width: double.infinity,
-                        height: 2,
-                        color: const Color(0xFFEEEEEE),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 600),
+    return BlocProvider(
+      create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Informasi Kategori"),
+          centerTitle: true,
+          backgroundColor: const Color(0xFF00973A),
+          foregroundColor: Colors.white,
+        ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  "Pilih Bank Sampah Kami",
-                                  style: TextStyle(
-                                      fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
+                              const Text(
+                                "LOGAM",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 0,
-                                nama: "Bank Sampah Kawasan 3",
-                                alamat:
-                                    "Jl. Raya Jonggol-Dayeuh No.19, Sukasirna Kec. Jonggol Kab. Bogor Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 1,
-                                nama: "Bank Sampah Al Amin",
-                                alamat:
-                                    "Singajaya, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 2,
-                                nama: "Bank Sampah Pucal",
-                                alamat:
-                                    "Kp. Jl. Pojok Salak No.02/08, Jonggol, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-
-                              const SizedBox(height: 24),
-
-                              // Tambahkan Padding bottom agar jarak tombol sama dengan KertasDetailPage
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 24),
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: selectedBankIndex != null
-                                        ? () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => FormPage(
-                                                  kategoriTerpilih: "Logam",
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        : null,
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          MaterialStateProperty.all(const Color(0xFF00973A)),
-                                      foregroundColor:
-                                          MaterialStateProperty.all(Colors.white),
-                                      padding: MaterialStateProperty.all(
-                                        const EdgeInsets.symmetric(vertical: 16),
-                                      ),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                      ),
-                                      elevation:
-                                          MaterialStateProperty.resolveWith<double>(
-                                        (states) =>
-                                            states.contains(MaterialState.disabled) ? 0 : 4,
-                                      ),
-                                      shadowColor: MaterialStateProperty.all(
-                                        Colors.grey.withOpacity(0.4),
-                                      ),
-                                    ),
-                                    child: const Text("Donasi Sekarang"),
-                                  ),
-                                ),
-                              ),
+                              const SizedBox(height: 16),
+                              _buildArtikel(),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          width: double.infinity,
+                          height: 2,
+                          color: const Color(0xFFEEEEEE),
+                        ),
+                        const SizedBox(height: 8),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    "Pilih Bank Sampah Kami",
+                                    style: TextStyle(
+                                        fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                BlocBuilder<BankBloc, BankState>(
+                                  builder: (context, state) {
+                                    if (state.isLoading) {
+                                      return const Center(child: CircularProgressIndicator());
+                                    }
+                                    if (state.errorMessage != null) {
+                                      return Center(child: Text('Error: ${state.errorMessage}'));
+                                    }
+                                    final bankList = state.bankList;
+                                    if (bankList.isEmpty) {
+                                      return const Center(child: Text('Belum ada data bank sampah.'));
+                                    }
+                                    return Column(
+                                      children: [
+                                        ...List.generate(bankList.length, (index) {
+                                          final bank = bankList[index];
+                                          return Column(
+                                            children: [
+                                              _buildBankSampahItem(
+                                                index: index,
+                                                nama: bank.bankSampahNama ?? '-',
+                                                alamat: bank.bankSampahAlamat ?? '-',
+                                                imagePath: "assets/images/map.png",
+                                              ),
+                                              const SizedBox(height: 12),
+                                            ],
+                                          );
+                                        }),
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 24),
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: ElevatedButton(
+                                              onPressed: selectedBankIndex != null
+                                                  ? () {
+                                                      final selectedBank = bankList[selectedBankIndex!];
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) => FormPage(
+                                                            kategoriTerpilih: "Logam",
+                                                            bankSampahNama: selectedBank.bankSampahNama ?? '-',
+                                                            bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  : null,
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(const Color(0xFF00973A)),
+                                                foregroundColor:
+                                                    MaterialStateProperty.all(Colors.white),
+                                                padding: MaterialStateProperty.all(
+                                                  const EdgeInsets.symmetric(vertical: 16),
+                                                ),
+                                                shape: MaterialStateProperty.all(
+                                                  RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                  ),
+                                                ),
+                                                elevation:
+                                                    MaterialStateProperty.resolveWith<double>(
+                                                  (states) =>
+                                                      states.contains(MaterialState.disabled) ? 0 : 4,
+                                                ),
+                                                shadowColor: MaterialStateProperty.all(
+                                                  Colors.grey.withOpacity(0.4),
+                                                ),
+                                              ),
+                                              child: const Text("Donasi Sekarang"),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -178,7 +190,7 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
               const Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  "♻ Sampah Logam yang Bisa Didaur Ulang: Harta Karun dari Barang Bekas!",
+                  "♻️ Sampah Logam yang Bisa Didaur Ulang: Harta Karun dari Barang Bekas!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -189,53 +201,45 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
         _buildCardArtikel(children: const [
           Text(
             "Daur Ulang Logam: Bernilai & Ramah Lingkungan!",
-            style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: 5),
           Text("Logam yang Bisa Didaur Ulang",
               style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 12),
           Text(
-              "1. Aluminium\nContoh: kaleng minuman, foil, tutup botol\nJadi: kaleng baru, rangka sepeda, suku cadang"),
+              "1. Aluminium\n    Contoh: kaleng minuman, foil, tutup\n    botol Jadi: kaleng baru, rangka\n    sepeda, suku cadang"),
           SizedBox(height: 6),
           Text(
-              "2. Besi & Baja\nContoh: kaleng makanan, paku, alat bekas\nJadi: bahan bangunan, pipa, alat rumah tangga"),
+              "2. Besi & Baja\n    Contoh: kaleng makanan, paku, alat\n    bekas Jadi: bahan bangunan, pipa,\n    alat rumah tangga"),
           SizedBox(height: 6),
           Text(
-              "3. Tembaga\nContoh: kabel, pipa, komponen elektronik\nJadi: kabel & komponen baru"),
+              "3. Tembaga\n    Contoh: kabel, pipa, komponen\n    elektronik Jadi: kabel & komponen\n   baru"),
           SizedBox(height: 10),
           Text("Yang Sulit Didaur Ulang",
               style: TextStyle(fontWeight: FontWeight.bold)),
           Text(
-              "● Logam campur plastik/karet\n● Logam kecil banget/berkarat\n● Kaleng cat bekas\n● Bersihkan dulu & hindari campuran bahan lain."),
+              "• Logam campur plastik/karet\n• Logam kecil banget/berkarat\n• Kaleng cat bekas (mengandung bahan\n  kimia)"),
+          SizedBox(height: 10),
+          Text(
+              "⚠ Bersihkan dulu dan hindari campuran bahan lain."),
         ]),
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [
           Text("Tips Menyimpan Sampah Logam",
               style: TextStyle(fontWeight: FontWeight.bold)),
           Text(
-              "• Cuci bersih dari sisa makanan/minuman\n• Lepas label plastik\n• Simpan di tempat kering\n• Kelompokkan jika jumlah banyak"),
+              "• Cuci bersih dari sisa makanan/\n  minuman\n• Lepas label plastik\n• Simpan di tempat kering\n• Kelompokkan jika jumlah banyak"),
         ]),
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [
-          Text("Manfaat Daur Ulang Logam",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(
-              "✅ Hemat sumber daya alam\n✅ Kurangi energi industri\n✅ Kurangi sampah berat & polusi tambang"),
+          Text("Logammu Bernilai Tinggi! Mulai dari Rp5.000/kg — donasikan dan raih manfaatnya!"),
           SizedBox(height: 10),
-          Text("Hasil Daur Ulang Logam",
+          Text("Yuk, Donasikan Sekarang!",
               style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(
-              "• Perabot\n• Alat pertanian\n• Kendaraan & sepeda\n• Komponen elektronik\n• Kaleng baru"),
-          SizedBox(height: 10),
-          Text(
-            "Yuk Mulai Pilah Logam dari Sekarang!\nTutup botol kecil pun bisa punya dampak besar untuk bumi!",
-            style: TextStyle(fontStyle: FontStyle.italic),
-          ),
         ]),
       ],
     );
   }
-
   Widget _buildCardArtikel({required List<Widget> children}) {
     return Card(
       elevation: 2,

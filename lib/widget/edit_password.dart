@@ -203,7 +203,7 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                         _safePop();
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF00AB41),
+                        backgroundColor: const Color(0xFF00973A),
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                       ),

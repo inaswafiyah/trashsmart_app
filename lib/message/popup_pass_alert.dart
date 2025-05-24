@@ -28,7 +28,7 @@ void showExitConfirmationPassword(BuildContext context) {
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(dialogContext),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color: Colors.green),
+                      side: const BorderSide(color:  Color(0xFF00973A)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
@@ -36,7 +36,7 @@ void showExitConfirmationPassword(BuildContext context) {
                     child: const Text(
                       'Batal',
                       style: TextStyle(
-                          color: Colors.green,
+                          color: const Color(0xFF00973A),
                           fontWeight: FontWeight.bold,
                           fontSize: 16),
                     ),
@@ -50,7 +50,7 @@ void showExitConfirmationPassword(BuildContext context) {
                       Navigator.pop(context);
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: const Color(0xFF00973A),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     ),

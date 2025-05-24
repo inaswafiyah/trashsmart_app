@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_state.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_event.dart';
+import 'package:trashsmart/data/datasource/bank_remote_datasource.dart';
 import 'package:trashsmart/widget/form_diri.dart';
 
 class JelantahDetailPage extends StatefulWidget {
@@ -11,150 +16,154 @@ class JelantahDetailPage extends StatefulWidget {
 class _JelantahDetailPageState extends State<JelantahDetailPage> {
   int? selectedBankIndex;
 
-  final List<Map<String, String>> bankSampahList = [
-    {
-      'nama': 'Bank Sampah Kawasan',
-      'alamat':
-          'Jl. Raya Jonggol-Dayeuh No.19, Sukasirna Kec. Jonggol Kab. Bogor Jawa Barat 16830',
-      'gambar': 'assets/images/map.png',
-    },
-    {
-      'nama': 'Bank Sampah Al Amin',
-      'alamat': 'Singajaya, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830',
-      'gambar': 'assets/images/map.png',
-    },
-    {
-      'nama': 'Bank Sampah Piosal',
-      'alamat':
-          'Kp Jl. Pojok Salak No.02/08, Jonggol, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830',
-      'gambar': 'assets/images/map.png',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF00973A),
-        centerTitle: true,
-        title: const Text(
-          "Artikel Kategori",
-          style: TextStyle(color: Colors.white),
+    return BlocProvider(
+      create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF00973A),
+          centerTitle: true,
+          title: const Text(
+            "Artikel Kategori",
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Text(
-                        "Jelantah",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildArtikel(),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-                ),
-
-                // Divider full width
-                Container(
-                  width: double.infinity,
-                  height: 2,
-                  color: const Color(0xFFEEEEEE),
-                ),
-                const SizedBox(height: 8),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 600),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            "Pilih Bank Sampah Kami",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                        const Text(
+                          "Jelantah",
+                          style: TextStyle(
+                              fontSize: 22, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 12),
-                        ...bankSampahList.asMap().entries.map((entry) {
-                          int index = entry.key;
-                          var bank = entry.value;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: _buildBankSampahItem(
-                              index: index,
-                              nama: bank['nama']!,
-                              alamat: bank['alamat']!,
-                              imagePath: bank['gambar']!,
-                            ),
-                          );
-                        }).toList(),
-                        const SizedBox(height: 24),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: selectedBankIndex != null
-                                ? () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const FormPage(
-                                            kategoriTerpilih: 'Jelantah'),
-                                      ),
-                                    );
-                                  }
-                                : null,
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF00973A)),
-                              foregroundColor:
-                                  MaterialStateProperty.all(Colors.white),
-                              padding: MaterialStateProperty.all(
-                                const EdgeInsets.symmetric(vertical: 16),
-                              ),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              elevation:
-                                  MaterialStateProperty.resolveWith<double>(
-                                      (states) =>
-                                          states.contains(
-                                                  MaterialState.disabled)
-                                              ? 0
-                                              : 4),
-                              shadowColor: MaterialStateProperty.all(
-                                  Colors.grey.withOpacity(0.4)),
-                            ),
-                            child: const Text("Donasi Sekarang"),
-                          ),
-                        ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 16),
+                        _buildArtikel(),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                  Container(
+                    width: double.infinity,
+                    height: 2,
+                    color: const Color(0xFFEEEEEE),
+                  ),
+                  const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: Text(
+                              "Pilih Bank Sampah Kami",
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          BlocBuilder<BankBloc, BankState>(
+                            builder: (context, state) {
+                              if (state.isLoading) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (state.errorMessage != null) {
+                                return Center(
+                                    child: Text('Error: ${state.errorMessage}'));
+                              }
+                              final bankList = state.bankList;
+                              if (bankList.isEmpty) {
+                                return const Center(
+                                    child: Text('Belum ada data bank sampah.'));
+                              }
+                              return Column(
+                                children: [
+                                  ...List.generate(bankList.length, (index) {
+                                    final bank = bankList[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 12),
+                                      child: _buildBankSampahItem(
+                                        index: index,
+                                        nama: bank.bankSampahNama ?? '-',
+                                        alamat: bank.bankSampahAlamat ?? '-',
+                                        imagePath: "assets/images/map.png",
+                                      ),
+                                    );
+                                  }),
+                                  const SizedBox(height: 24),
+                                  SizedBox(
+                                    width: double.infinity,
+                                    child: ElevatedButton(
+                                      onPressed: selectedBankIndex != null
+                                          ? () {
+                                              final selectedBank = bankList[selectedBankIndex!];
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => FormPage(
+                                                    kategoriTerpilih: 'Jelantah',
+                                                    bankSampahNama: selectedBank.bankSampahNama ?? '-',
+                                                    bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          : null,
+                                      style: ButtonStyle(
+                                        backgroundColor: MaterialStateProperty.all(
+                                            const Color(0xFF00973A)),
+                                        foregroundColor:
+                                            MaterialStateProperty.all(Colors.white),
+                                        padding: MaterialStateProperty.all(
+                                          const EdgeInsets.symmetric(vertical: 16),
+                                        ),
+                                        shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                        ),
+                                        elevation:
+                                            MaterialStateProperty.resolveWith<double>(
+                                                (states) =>
+                                                    states.contains(
+                                                            MaterialState.disabled)
+                                                        ? 0
+                                                        : 4),
+                                        shadowColor: MaterialStateProperty.all(
+                                            Colors.grey.withOpacity(0.4)),
+                                      ),
+                                      child: const Text("Donasi Sekarang"),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -164,15 +173,15 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
       children: [
         Card(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               ClipRRect(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12)),
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
                 child: Image(
                   image: AssetImage('assets/kategori/ijelantah.png'),
                   width: double.infinity,
@@ -183,8 +192,8 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  "♻ Kenali Jelantah: Limbah yang Bisa Jadi Berkah!",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  "♻️ Kenali Jelantah: Limbah yang Bisa Jadi Berkah!",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
             ],
@@ -193,28 +202,34 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [
           Text(
-              "⚠ Bahaya Jika Dibuang Sembarangan:\n"
-              "• Menyumbat saluran air\n"
-              "• Mencemari tanah & air\n"
-              "• Menjadi sarang penyakit & serangga\n"
-              "• Berbahaya jika terus digunakan",
-              style: TextStyle(fontSize: 15)),
+            "Jelantah adalah minyak goreng bekas yang sudah digunakan berkali-kali. Biasanya warnanya menggelap dan kualitasnya menurun.",
+          ),
+          SizedBox(height: 8),
+          Text("⚠ Bahaya Jika Dibuang Sembarangan:",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text("• Menyumbat saluran air"),
+          Text("• Mencemari tanah & air"),
+          Text("• Menjadi sarang penyakit & serangga"),
+          Text("• Berbahaya jika terus digunakan"),
+        ]),
+        const SizedBox(height: 12),
+        _buildCardArtikel(children: const [
+          Text("Cara Mengelola Jelantah:",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 8),
+          Text("• Dinginkan & saring, simpan di wadah\n  tertutup"),
+          Text("• Jangan buang ke selokan"),
+          Text("• Serahkan ke bank jelantah atau\n   program daur ulang"),
         ]),
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [
           Text(
-              "Cara Mengelola Jelantah:\n"
-              "• Dinginkan & saring, simpan di wadah tertutup\n"
-              "• Jangan buang ke selokan\n"
-              "• Serahkan ke bank jelantah atau program daur ulang",
-              style: TextStyle(fontSize: 15)),
-        ]),
-        const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text(
-              "Jelantahmu Berharga! Mulai dari Rp3.000/liter donasikan dan selamatkan lingkungan!\n\n"
-              "Yuk, Donasikan Sekarang!",
-              style: TextStyle(fontSize: 15)),
+            "Jelantahmu Berharga! Mulai dari Rp3.000/liter, donasikan dan selamatkan lingkungan!",
+          ),
+          SizedBox(height: 8),
+          Text("Yuk, Donasikan Sekarang!",
+              style: TextStyle(fontWeight: FontWeight.bold)),
         ]),
       ],
     );

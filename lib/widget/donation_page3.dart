@@ -5,15 +5,19 @@ import 'package:trashsmart/maps/posal_map.dart';
 import 'package:trashsmart/widget/form_diri.dart';
 
 class DonasiPage3 extends StatefulWidget {
-  const DonasiPage3({super.key});
+  final String bankSampahNama;
+  final String bankSampahAlamat;
+  const DonasiPage3({
+    super.key,
+    required this.bankSampahNama,
+    required this.bankSampahAlamat,
+  });
 
   @override
   _DonasiPage3State createState() => _DonasiPage3State();
 }
 
 class _DonasiPage3State extends State<DonasiPage3> {
-  String? kategoriTerpilih;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,10 +40,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
               height: 200,
               child: FlutterMap(
                 options: MapOptions(
-                  initialCenter: LatLng(
-                    -6.5036956,
-                    107.0473927,
-                  ), // Lokasi Bank Sampah Kowasa
+                  initialCenter: LatLng(-6.5036956, 107.0473927), // Koordinat default
                   initialZoom: 17.0,
                 ),
                 children: [
@@ -70,14 +71,15 @@ class _DonasiPage3State extends State<DonasiPage3> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Bank Sampah Posal',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Text(
+                    widget.bankSampahNama,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'kp Jl. Pojok Salak No.02/08, Jonggol, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830',
-                    style: TextStyle(color: Colors.black54),
+                  Text(
+                    widget.bankSampahAlamat,
+                    style: const TextStyle(color: Colors.black54),
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
@@ -125,13 +127,13 @@ class _DonasiPage3State extends State<DonasiPage3> {
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 children: [
-                  _buildSampahItem('plastik', 'Plastik'),
-                  _buildSampahItem('kertas', 'Kertas'),
-                  _buildSampahItem('logam', 'Logam'),
-                  _buildSampahItem('organik', 'Organik'),
-                  _buildSampahItem('tekstil', 'Tekstil'),
-                  _buildSampahItem('kaca', 'Kaca'),
-                  _buildSampahItem('jelantah', 'Jelantah'),
+                  _buildSampahDisplay('plastik', 'Plastik'),
+                  _buildSampahDisplay('kertas', 'Kertas'),
+                  _buildSampahDisplay('logam', 'Logam'),
+                  _buildSampahDisplay('organik', 'Organik'),
+                  _buildSampahDisplay('tekstil', 'Tekstil'),
+                  _buildSampahDisplay('kaca', 'Kaca'),
+                  _buildSampahDisplay('jelantah', 'Jelantah'),
                 ],
               ),
             ),
@@ -147,10 +149,11 @@ class _DonasiPage3State extends State<DonasiPage3> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder:
-                            (context) => FormPage(
-                              kategoriTerpilih: kategoriTerpilih ?? '',
-                            ),
+                        builder: (context) => FormPage(
+                          kategoriTerpilih: '', // kosong, biar user pilih sendiri di form
+                          bankSampahNama: widget.bankSampahNama,
+                          bankSampahAlamat: widget.bankSampahAlamat,
+                        ),
                       ),
                     );
                   },
@@ -174,41 +177,34 @@ class _DonasiPage3State extends State<DonasiPage3> {
     );
   }
 
-  // Fungsi untuk membuat item sampah
-  Widget _buildSampahItem(String iconName, String label) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          kategoriTerpilih = label; // Menyimpan kategori yang dipilih
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.only(right: 16.0),
-        child: Column(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 6,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Image.asset('assets/images/$iconName.png'),
-              ),
+  // Fungsi untuk menampilkan jenis sampah
+  Widget _buildSampahDisplay(String iconName, String label) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 16.0),
+      child: Column(
+        children: [
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 6,
+                  offset: Offset(0, 2),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(label),
-          ],
-        ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Image.asset('assets/images/$iconName.png'),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(label),
+        ],
       ),
     );
   }

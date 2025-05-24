@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_bloc.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_state.dart';
+import 'package:trashsmart/presentation/auth/bloc/bank/bank_event.dart';
+import 'package:trashsmart/data/datasource/bank_remote_datasource.dart';
 import 'package:trashsmart/widget/form_diri.dart';
 
 class TekstilDetailPage extends StatefulWidget {
@@ -13,151 +18,163 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Informasi Kategori"),
-        centerTitle: true,
-        backgroundColor: const Color(0xFF00973A),
-        foregroundColor: Colors.white,
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Tekstil",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildArtikel(),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-
-                      // Divider
-                      Container(
-                        width: double.infinity,
-                        height: 2,
-                        color: const Color(0xFFEEEEEE),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 600),
+    return BlocProvider(
+      create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Informasi Kategori"),
+          centerTitle: true,
+          backgroundColor: const Color(0xFF00973A),
+          foregroundColor: Colors.white,
+        ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text(
-                                  "Pilih Bank Sampah Kami",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                              const Text(
+                                "Tekstil",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 0,
-                                nama: "Bank Sampah Kowasa",
-                                alamat:
-                                    "Jl. Raya Jonggol-Dayeuh No.19, Sukasirna Kec. Jonggol Kab. Bogor Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 1,
-                                nama: "Bank Sampah Al Amin",
-                                alamat:
-                                    "Singajaya, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 12),
-                              _buildBankSampahItem(
-                                index: 2,
-                                nama: "Bank Sampah Posal",
-                                alamat:
-                                    "Kp. Jl. Pojok Salak No.02/08, Jonggol, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830",
-                                imagePath: "assets/images/map.png",
-                              ),
-                              const SizedBox(height: 24),
-
-                              // Tombol Donasi Sekarang
-                              SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: selectedBankIndex != null
-                                      ? () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const FormPage(
-                                                      kategoriTerpilih:
-                                                          'Tekstil'),
-                                            ),
-                                          );
-                                        }
-                                      : null,
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(
-                                            const Color(0xFF00973A)),
-                                    foregroundColor:
-                                        MaterialStateProperty.all(
-                                            Colors.white),
-                                    padding: MaterialStateProperty.all(
-                                      const EdgeInsets.symmetric(
-                                          vertical: 16),
-                                    ),
-                                    shape: MaterialStateProperty.all(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    elevation: MaterialStateProperty
-                                        .resolveWith<double>(
-                                      (states) => states.contains(
-                                              MaterialState.disabled)
-                                          ? 0
-                                          : 4,
-                                    ),
-                                    shadowColor: MaterialStateProperty.all(
-                                      Colors.grey.withOpacity(0.4),
-                                    ),
-                                  ),
-                                  child: const Text("Donasi Sekarang"),
-                                ),
-                              ),
-
-                              // Tambahan jarak bawah tombol supaya tidak mentok
                               const SizedBox(height: 16),
+                              _buildArtikel(),
+                              const SizedBox(height: 20),
                             ],
                           ),
                         ),
-                      ),
-                    ],
+
+                        // Divider
+                        Container(
+                          width: double.infinity,
+                          height: 2,
+                          color: const Color(0xFFEEEEEE),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 600),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    "Pilih Bank Sampah Kami",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                BlocBuilder<BankBloc, BankState>(
+                                  builder: (context, state) {
+                                    if (state.isLoading) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    }
+                                    if (state.errorMessage != null) {
+                                      return Center(
+                                          child: Text('Error: ${state.errorMessage}'));
+                                    }
+                                    final bankList = state.bankList;
+                                    if (bankList.isEmpty) {
+                                      return const Center(
+                                          child: Text('Belum ada data bank sampah.'));
+                                    }
+                                    return Column(
+                                      children: [
+                                        ...List.generate(bankList.length, (index) {
+                                          final bank = bankList[index];
+                                          return Padding(
+                                            padding:
+                                                const EdgeInsets.only(bottom: 12),
+                                            child: _buildBankSampahItem(
+                                              index: index,
+                                              nama: bank.bankSampahNama ?? '-',
+                                              alamat: bank.bankSampahAlamat ?? '-',
+                                              imagePath: "assets/images/map.png",
+                                            ),
+                                          );
+                                        }),
+                                        const SizedBox(height: 24),
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ElevatedButton(
+                                            onPressed: selectedBankIndex != null
+                                                ? () {
+                                                    final selectedBank = bankList[selectedBankIndex!];
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) => FormPage(
+                                                          kategoriTerpilih: 'Tekstil',
+                                                          bankSampahNama: selectedBank.bankSampahNama ?? '-',
+                                                          bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }
+                                                : null,
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      const Color(0xFF00973A)),
+                                              foregroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.white),
+                                              padding: MaterialStateProperty.all(
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 16),
+                                              ),
+                                              shape: MaterialStateProperty.all(
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              elevation: MaterialStateProperty
+                                                  .resolveWith<double>(
+                                                (states) => states.contains(
+                                                        MaterialState.disabled)
+                                                    ? 0
+                                                    : 4,
+                                              ),
+                                              shadowColor: MaterialStateProperty.all(
+                                                Colors.grey.withOpacity(0.4),
+                                              ),
+                                            ),
+                                            child: const Text("Donasi Sekarang"),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -167,8 +184,7 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
       children: [
         Card(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
@@ -186,7 +202,7 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
               Padding(
                 padding: EdgeInsets.all(16),
                 child: Text(
-                  "♻ Sampah Tekstil: Ubah Baju Lama Jadi Peluang Baru!",
+                  "♻️ Sampah Tekstil: Ubah Baju Lama Jadi Peluang Baru!",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -197,37 +213,39 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
         _buildCardArtikel(children: const [
           Text(
             "Daur Ulang Sampah Tekstil: Hemat & Kreatif!",
-            style: TextStyle(fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8),
-          Text("Yang Bisa Didaur Ulang:"),
-          Text("• Pakaian layak pakai\n• Kain perca\n• Seprai/gorden\n• Pakaian rusak"),
+          Text("Yang Bisa Didaur Ulang",
+              style: TextStyle(fontWeight: FontWeight.bold),),
+          Text("• Pakaian layak pakai: bisa didonasi,\n  dijual,atau diubah jadi produk baru"),
+          Text("• Kain perca: cocok untuk kerajinan (tas,\n  boneka, dompet)"),
+          Text("• Seprai, handuk, gorden lama: bisa jadi\n  keset, lap pel"),
+          Text("• Pakaian rusak: bisa jadi isi bantal,\n  bahan isolasi, atau bangunan"),
           SizedBox(height: 8),
-          Text("Yang Sulit Didaur Ulang:"),
-          Text("• Terkontaminasi bahan kimia\n• Berjamur\n• Campur logam/plastik"),
-          SizedBox(height: 8),
+          Text("Yang Sulit Didaur Ulang",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          Text("• Terkena bahan kimia"),
+          Text("• Sangat kotor atau berjamur"),
+          Text("• Campur logam/plastik yang sulit\n  dipisah"),
           Text("⚠ Lepas kancing & resleting sebelum didaur ulang!"),
         ]),
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [
-          Text("Cara Mengelola di Rumah",
+          Text("Cara Mengelola:",
               style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
-          Text(
-              "1. Pisahkan yang masih bagus\n2. Yang rusak → ke bank sampah\n3. Potong jadi lap\n4. Simpan dalam kondisi bersih"),
+          Text("• Pisahkan yang masih bagus\n  → donasi/preloved"),
+          Text("• Yang rusak → drop-off ke bank\n  sampah"),
+          Text("• Potong jadi lap, isian boneka, dll"),
+          Text("• Simpan dalam kondisi bersih & kering"),
         ]),
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [
-          Text("Manfaatnya ✅", style: TextStyle(fontWeight: FontWeight.bold)),
+          Text("Satu kilo tekstil = Rp2.500! Yuk, bersihkan lemari sambil bantu lingkungan.",
+            ),
           SizedBox(height: 8),
-          Text(
-              "✅ Kurangi sampah TPA\n✅ Hemat bahan baku\n✅ Kurangi polusi air\n✅ Buka peluang usaha kreatif"),
-        ]),
-        const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Ide Kreatif 💡", style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("• Patchwork unik\n• Keset & bantal\n• Boneka dari kain\n• Kain lap dari handuk rusak"),
+          Text("Yuk, Donasikan Sekarang!",
+              style: TextStyle(fontWeight: FontWeight.bold)),
         ]),
       ],
     );

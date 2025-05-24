@@ -46,8 +46,8 @@ class PopupLogout extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                        foregroundColor: const Color(0xFF009B3E),
-                        side: const BorderSide(color: Color(0xFF009B3E)),
+                        foregroundColor: const Color(0xFF00973A),
+                        side: const BorderSide(color:  Color(0xFF00973A)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -61,7 +61,7 @@ class PopupLogout extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF009B3E),
+                        backgroundColor: const Color(0xFF00973A),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -85,14 +85,16 @@ class PopupLogout extends StatelessWidget {
 
   Future<void> logout(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token'); 
-    await prefs.remove('hasSeenOnboarding');
+    await prefs.remove('avatar_url'); // Hapus avatar
+    await prefs.remove('auth_data');  // Hapus data user lain jika perlu
+    await prefs.remove('token');      // Hapus token login jika ada
 
     Navigator.pop(context);
 
-    Navigator.pushReplacement(
+    Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => LoginPage()),
+      MaterialPageRoute(builder: (_) => LoginPage()),
+      (route) => false,
     );
   }
 }

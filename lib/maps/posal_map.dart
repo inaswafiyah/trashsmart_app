@@ -74,7 +74,7 @@ class _MapPageState extends State<MapPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Lokasi'),
-        backgroundColor: Colors.green[700],
+        backgroundColor: Colors.green[0xFF00973A],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -146,7 +146,7 @@ class _MapPageState extends State<MapPage> {
                               ? 'Jarak ke lokasi: ${_distanceInKm!.toStringAsFixed(2)} km'
                               : 'Jarak ke lokasi: Tidak tersedia',
                           style: const TextStyle(
-                              color: Colors.green,
+                              color:  Color(0xFF00973A),
                               fontWeight: FontWeight.w500),
                         ),
                       ],

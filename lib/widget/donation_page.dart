@@ -30,7 +30,7 @@ class _DonasiPage1State extends State<DonasiPage1> {
         ),
         title: const Text('Donasi', style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color(0xFF009B3E),
+        backgroundColor: const Color(0xFF00973A),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -95,7 +95,7 @@ class _DonasiPage1State extends State<DonasiPage1> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF009B3E),
+                        backgroundColor: const Color(0xFF00973A),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 8,
@@ -152,12 +152,14 @@ class _DonasiPage1State extends State<DonasiPage1> {
                         builder:
                             (context) => FormPage(
                               kategoriTerpilih: kategoriTerpilih ?? '',
+                              bankSampahNama: 'Bank Sampah Kowasa',
+                              bankSampahAlamat: 'Jl. Raya Jonggol-Dayeuh No.19, Sukasirna Kec. jonggol Kab. Bogor Jawa Barat 16830',
                             ),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF009B3E),
+                    backgroundColor: const Color(0xFF00973A),
                     shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                     ),
@@ -189,7 +191,7 @@ class _DonasiPage1State extends State<DonasiPage1> {
               height: 60,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: selected ? const Color(0xFF0F7A32) : Colors.white,
+                color: selected ? const Color(0xFF00973A) : Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black26,

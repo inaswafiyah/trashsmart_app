@@ -57,7 +57,7 @@ class _KowasaPageState extends State<KowasaPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detail Lokasi"),
-        backgroundColor: const Color(0xFF0F7A32),
+        backgroundColor: const Color(0xFF00973A),
       ),
       body: Column(
         children: [
@@ -120,7 +120,7 @@ class _KowasaPageState extends State<KowasaPage> {
                   Text(
                     'Jarak ke lokasi: ${_jarak!.toStringAsFixed(1)} km',
                     style: const TextStyle(
-                      color: Colors.green,
+                      color:  Color(0xFF00973A),
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,

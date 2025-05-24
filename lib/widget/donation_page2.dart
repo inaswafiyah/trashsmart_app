@@ -42,7 +42,7 @@ class DonasiPage2 extends StatelessWidget {
         ),
         title: const Text('Donasi', style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: const Color(0xFF009B3E),
+        backgroundColor: const Color(0xFF00973A),
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -111,7 +111,7 @@ class DonasiPage2 extends StatelessWidget {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF009B3E),
+                        backgroundColor: const Color(0xFF00973A),
                         padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 8,
@@ -167,12 +167,14 @@ class DonasiPage2 extends StatelessWidget {
                         builder:
                             (context) => FormPage(
                               kategoriTerpilih: kategoriTerpilih ?? '',
+                              bankSampahNama: 'Bank Sampah Al Amin',
+                              bankSampahAlamat: 'Singajaya, Kec. Jonggol, Kabupaten Bogor, Jawa Barat 16830',
                             ),
                       ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                     backgroundColor: const Color(0xFF009B3E),
+                     backgroundColor: const Color(0xFF00973A),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

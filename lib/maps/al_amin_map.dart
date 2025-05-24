@@ -57,7 +57,7 @@ class _AlAminMapPageState extends State<AlAminMapPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Lokasi AL Amin"),
-        backgroundColor: const Color(0xFF0F7A32),
+        backgroundColor: const Color(0xFF00973A),
       ),
       body: Column(
         children: [

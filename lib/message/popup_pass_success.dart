@@ -15,7 +15,7 @@ Future<void> PopSuccessPassword(BuildContext context) {
             children: [
               CircleAvatar(
                 radius: 40,
-                backgroundColor: const Color(0xFF4CAF50),
+                backgroundColor: const Color(0xFF00973A),
                 child: const Icon(Icons.check, color: Colors.white, size: 40),
               ),
               const SizedBox(height: 20),

@@ -25,6 +25,7 @@ class HalamanUtama extends StatefulWidget {
 
 class _HalamanUtamaState extends State<HalamanUtama> {
   int totalDonasi = 0;
+  bool isLoadingDonasi = true; // Tambahkan ini
   String username = "User";
   String? avatarUrl;
   List<Map<String, dynamic>> sortedVideos = [];
@@ -34,40 +35,72 @@ class _HalamanUtamaState extends State<HalamanUtama> {
     super.initState();
     _loadUserData();
     _loadVideos();
+    _loadTotalDonasi();
   }
 
   Future<void> _loadUserData() async {
-    try {
-      final authData = await AuthLocalDatasource().getAuthData();
-      final prefs = await SharedPreferences.getInstance();
-      final avatar = prefs.getString('avatar_url');
-      if (authData.user != null && authData.user!.username != null) {
-        setState(() {
-          username = authData.user!.username!;
-          avatarUrl = avatar;
-        });
-      }
-    } catch (e) {
-      print('Error loading user data: $e');
+  try {
+    final authData = await AuthLocalDatasource().getAuthData();
+    final prefs = await SharedPreferences.getInstance();
+    final avatar = prefs.getString('avatar_url');
+    if (authData.user != null && authData.user!.username != null) {
+      if (!mounted) return;
+      setState(() {
+        username = authData.user!.username!;
+        avatarUrl = avatar;
+      });
     }
+  } catch (e) {
+    print('Error loading user data: $e');
   }
+}
 
-  Future<void> _loadVideos() async {
-    final result = await AuthRemoteDatasource().getAllVideos();
-    result.fold(
-      (error) => print("Gagal ambil video: $error"),
-      (videos) {
-        videos.sort((a, b) {
-          final aDate = DateTime.tryParse(a['created_at'] ?? '') ?? DateTime.now();
-          final bDate = DateTime.tryParse(b['created_at'] ?? '') ?? DateTime.now();
-          return bDate.compareTo(aDate);
-        });
-        setState(() {
-          sortedVideos = videos;
-        });
-      },
-    );
+Future<void> _loadVideos() async {
+  print("Mulai load videos");
+  final result = await AuthRemoteDatasource().getAllVideos();
+  print("Selesai getAllVideos");
+  result.fold(
+    (error) => print("Gagal ambil video: $error"),
+    (videos) {
+      print("Videos didapat, jumlah: ${videos.length}");
+      videos.sort((a, b) {
+        final aDate = DateTime.tryParse(a['created_at'] ?? '') ?? DateTime.now();
+        final bDate = DateTime.tryParse(b['created_at'] ?? '') ?? DateTime.now();
+        return bDate.compareTo(aDate);
+      });
+      if (!mounted) {
+        print("Widget sudah tidak mounted, return");
+        return;
+      }
+      print("Sebelum setState");
+      setState(() {
+        sortedVideos = videos;
+      });
+      print("SetState selesai");
+    },
+  );
+}
+
+Future<void> _loadTotalDonasi() async {
+  if (!mounted) return;
+  setState(() {
+    isLoadingDonasi = true;
+  });
+  try {
+    final total = await AuthRemoteDatasource().getTotalDonasi();
+    if (!mounted) return;
+    setState(() {
+      totalDonasi = total;
+      isLoadingDonasi = false;
+    });
+  } catch (e) {
+    print('Error loading total donasi: $e');
+    if (!mounted) return;
+    setState(() {
+      isLoadingDonasi = false;
+    });
   }
+}
 
   String _youtubeVideoId(String url) {
     final uri = Uri.parse(url);
@@ -116,7 +149,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                   },
                   child: CircleAvatar(
                     radius: 22,
-                    backgroundColor: const Color.fromARGB(255, 42, 159, 81),
+                    backgroundColor: Colors.green,
                     backgroundImage: (avatarUrl != null && avatarUrl!.isNotEmpty)
                         ? NetworkImage(avatarUrl!)
                         : null,
@@ -126,6 +159,11 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                             style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           )
                         : null,
+                    // Tambahkan errorBuilder jika pakai Image.network
+                    // child: Image.network(
+                    //   avatarUrl!,
+                    //   errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
+                    // ),
                   ),
                 ),
               ],
@@ -150,7 +188,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                       const Icon(Icons.star, color: Colors.yellow, size: 40),
                       const SizedBox(width: 8),
                       Text(
-                        "$totalDonasi",
+                        isLoadingDonasi ? ".." : "$totalDonasi", // Ubah di sini
                         style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 8),
@@ -158,7 +196,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Divider(color: Colors.white, thickness: 1),
+                  const Divider(color: Color(0xFFFDC901), thickness: 2),
                   const SizedBox(height: 8),
                   const Text("Kumpulkan bintang, wujudkan kebaikan!",
                       style: TextStyle(color: Colors.white)),
@@ -249,11 +287,14 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              'https://img.youtube.com/vi/$id/0.jpg',
-                              width: 150,
-                              height: 100,
-                              fit: BoxFit.cover,
+                            child: SizedBox(
+                              width: 120, // atau 140, sesuaikan dengan desain
+                              height: 68, // 16:9 dari 120 = 67.5, dibulatkan 68
+                              child: Image.network(
+                                'https://img.youtube.com/vi/$id/0.jpg',
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center,
+                              ),
                             ),
                           ),
                           Icon(Icons.play_circle_fill, size: 40, color: Colors.white.withOpacity(0.8)),

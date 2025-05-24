@@ -72,31 +72,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final updatedUserData = data['data'];
-      final updatedUser = user.copyWith(
-        username: updatedUserData['username'],
-        email: updatedUserData['email'],
-        phone: updatedUserData['phone'],
-        updatedAt: updatedUserData['updated_at'],
-      );
-
-      final newAuthData = AuthResponseModel(
-        user: updatedUser,
-        token: token,
-      );
-
-      await prefs.setString('auth_data', newAuthData.toJson());
-
-      setState(() {
-        _nameController.text = updatedUser.username ?? '';
-        _emailController.text = updatedUser.email ?? '';
-        _phoneController.text = updatedUser.phone ?? '';
-      });
-
+      // ...sukses...
       return true;
+    } else if (response.statusCode == 400) {
+      final data = jsonDecode(response.body);
+      final errors = data['errors'];
+      String errorMsg = '';
+      if (errors['email'] != null) {
+        errorMsg += errors['email'][0];
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMsg.isNotEmpty ? errorMsg : 'Gagal update profile')),
+      );
+      return false;
     } else {
-      print('Update profile failed: ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to update profile. Please try again.')),
+      );
       return false;
     }
   }
@@ -251,9 +243,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                foregroundColor: Color(0xFF207A3E),
+                foregroundColor: Color(0xFF00973A),
                 elevation: 0,
-                side: BorderSide(color: Color(0xFF207A3E)),
+                side: BorderSide(color: Color(0xFF00973A)),
                 padding: EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -267,7 +259,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             child: ElevatedButton(
               onPressed: _isFormValid ? _handleSave : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: _isFormValid ? Color(0xFF207A3E) : Colors.grey,
+                backgroundColor: _isFormValid ? Color(0xFF00973A) : Colors.grey,
                 foregroundColor: Colors.white,
                 elevation: 0,
                 padding: EdgeInsets.symmetric(vertical: 14),

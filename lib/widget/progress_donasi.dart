@@ -1,12 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:trashsmart/data/datasource/auth_remote_datasource.dart';
 
-class ProgresDonasiPage extends StatelessWidget {
+class ProgresDonasiPage extends StatefulWidget {
   const ProgresDonasiPage({super.key});
+
+  @override
+  State<ProgresDonasiPage> createState() => _ProgresDonasiPageState();
+}
+
+class _ProgresDonasiPageState extends State<ProgresDonasiPage> {
+  int totalDonasi = 0;
+  bool isLoadingDonasi = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTotalDonasi();
+  }
+
+  Future<void> _loadTotalDonasi() async {
+    setState(() {
+      isLoadingDonasi = true;
+    });
+    try {
+      final total = await AuthRemoteDatasource().getTotalDonasi();
+      if (!mounted) return;
+      setState(() {
+        totalDonasi = total;
+        isLoadingDonasi = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingDonasi = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Latar belakang utama putih
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -42,21 +75,21 @@ class ProgresDonasiPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 24), // Diperbesar dari 16 -> 24
+                const SizedBox(height: 24),
                 Row(
-                  children: const [
-                    Icon(Icons.star, color: Color(0xFFFDC901), size: 50),
-                    SizedBox(width: 8),
+                  children: [
+                    const Icon(Icons.star, color: Color(0xFFFDC901), size: 50),
+                    const SizedBox(width: 8),
                     Text(
-                      '0',
-                      style: TextStyle(
+                      isLoadingDonasi ? "..." : "$totalDonasi",
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 36,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(width: 8),
-                    Text(
+                    const SizedBox(width: 8),
+                    const Text(
                       'Total Bintangmu',
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
@@ -80,14 +113,14 @@ class ProgresDonasiPage extends StatelessWidget {
             ),
           ),
 
-          // BAGIAN ABU HANYA DI ANTARA CARD HIJAU DAN IKON DONASI
+          // BAGIAN ABU DI ANTARA CARD DAN ISI
           Container(
             width: double.infinity,
             height: 16,
             color: const Color(0xFFF5F5F5),
           ),
 
-          // IKON DONASI DAN GARIS
+          // IKON DONASI & TEKS
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Container(
@@ -99,16 +132,25 @@ class ProgresDonasiPage extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Image.asset(
-                    'assets/icons/iconsdonasi.png',
-                    width: 34,
-                    height: 34,
-                    fit: BoxFit.contain,
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    padding: const EdgeInsets.all(3),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/icons/iconsdonasi.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
-                    'Total Donasi: 0',
-                    style: TextStyle(fontSize: 16),
+                  Text(
+                    'Total Donasi: ${isLoadingDonasi ? "..." : "$totalDonasi"}',
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
@@ -117,7 +159,7 @@ class ProgresDonasiPage extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // SISA HALAMAN PUTIH
+          // SISA HALAMAN KOSONG PUTIH
           const Expanded(
             child: SizedBox(),
           ),

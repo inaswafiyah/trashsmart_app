@@ -1,22 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trashsmart/data/datasource/auth_remote_datasource.dart';
-import 'package:trashsmart/data/datasource/auth_local_datasource.dart';
 import 'package:trashsmart/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:trashsmart/presentation/auth/bloc/register/register_bloc.dart';
-import 'package:trashsmart/presentation/auth/pages/register.dart';
 import 'package:trashsmart/presentation/auth/pages/splash_screen.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiBlocProvider(
+void main() async {
+   WidgetsFlutterBinding.ensureInitialized();
+   await Firebase.initializeApp();
+  runApp(MultiBlocProvider(
       providers: [
         BlocProvider(
           create: (context) => LoginBloc(AuthRemoteDatasource()),
@@ -27,7 +20,17 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ],
-      child: MaterialApp(
+      child: MyApp()),
+      );
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return 
+        MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'TrashSmart',
         theme: ThemeData(
@@ -35,7 +38,6 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: const SplashScreen(),
-      ),
-    );
+      );
   }
 }

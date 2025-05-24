@@ -19,7 +19,7 @@ Future<bool> showSuccessDialog(BuildContext context) {
                 width: 80,
                 height: 80,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF4DA16A), // Warna hijau yang lebih sesuai dengan gambar
+                  color: const Color(0xFF00973A), // Warna hijau yang lebih sesuai dengan gambar
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(

@@ -90,13 +90,13 @@ class _HomePageState extends State<HomePage> {
             iconPath,
             width: 24,
             height: 24,
-            color: isSelected ? const Color(0xFF0F7A32) : Colors.grey,
+            color: isSelected ? const Color(0xFF00973A) : Colors.grey,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: isSelected ? const Color(0xFF0F7A32) : Colors.grey,
+              color: isSelected ? const Color(0xFF00973A) : Colors.grey,
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),

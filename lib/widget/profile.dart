@@ -108,7 +108,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                         padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: avatar['id'] == _selectedAvatar ? Border.all(color: Colors.green, width: 3) : null,
+                          border: avatar['id'] == _selectedAvatar ? Border.all(color: Color(0xFF00973A), width: 3) : null,
                         ),
                         child: CircleAvatar(
                           radius: 32,
@@ -145,31 +145,31 @@ class _ProfilePagesState extends State<ProfilePages> {
           Stack(
             children: [
               CircleAvatar(
-                radius: 40,
-                backgroundColor: Colors.grey.shade300,
-                backgroundImage: _avatarUrl != null ? NetworkImage(_avatarUrl!) : null,
-                child: _avatarUrl == null
-                    ? Text(
-                        userInitial,
-                        style: const TextStyle(
-                          fontSize: 40,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    : null,
+          radius: 40,
+          backgroundColor: Colors.grey.shade300,
+          backgroundImage: _avatarUrl != null ? NetworkImage(_avatarUrl!) : null,
+          child: _avatarUrl == null
+              ? Text(
+            userInitial,
+            style: const TextStyle(
+              fontSize: 40,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+                )
+              : null,
               ),
               Positioned(
-                bottom: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: _showAvatarPicker,
-                  child: const CircleAvatar(
-                    radius: 14,
-                     backgroundColor: Color(0xFF207A3E),
-                    child: Icon(Icons.camera_alt, size: 16, color: Colors.white),
-                  ),
-                ),
+          bottom: 0,
+          right: 0,
+          child: GestureDetector(
+            onTap: _showAvatarPicker,
+            child: const CircleAvatar(
+              radius: 14,
+               backgroundColor: Color(0xFF00973A),
+              child: Icon(Icons.camera_alt, size: 16, color: Colors.white),
+            ),
+          ),
               ),
             ],
           ),
@@ -186,68 +186,69 @@ class _ProfilePagesState extends State<ProfilePages> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                _buildProfileItem(
-                  iconPath: 'assets/icons/iconprofile.png',
-                  label: 'Edit Akun',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => EditProfilePage()),
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
-                _buildProfileItem(
-                  iconPath: 'assets/icons/iconpass.png',
-                  label: 'Ubah Kata Sandi',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => EditPasswordPage()),
-                    );
-                  },
-                ),
-                const SizedBox(height: 24),
-                _buildProfileItem(
-                  iconPath: 'assets/icons/icondonasi.png',
-                  label: 'Progres Donasi',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => ProgresDonasiPage()),
-                    );
-                  },
-                ),
+          _buildProfileItem(
+            iconPath: 'assets/icons/iconprofile.png',
+            label: 'Edit Akun',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => EditProfilePage()),
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+          _buildProfileItem(
+            iconPath: 'assets/icons/iconpass.png',
+            label: 'Ubah Kata Sandi',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => EditPasswordPage()),
+              );
+            },
+          ),
+          const SizedBox(height: 24),
+          _buildProfileItem(
+            iconPath: 'assets/icons/icondonasi.png',
+            label: 'Progres Donasi',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => ProgresDonasiPage()),
+              );
+            },
+          ),
               ],
             ),
           ),
-          const Spacer(),
+          const SizedBox(height: 110), // Tambahkan jarak agar button tidak terlalu ke bawah
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: OutlinedButton.icon(
               style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.red,
-                side: const BorderSide(color: Colors.red),
-                minimumSize: const Size.fromHeight(48),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+          foregroundColor: Colors.red,
+          side: const BorderSide(color: Colors.red),
+          minimumSize: const Size.fromHeight(48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const PopupLogout()),
-                );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const PopupLogout()),
+          );
               },
               icon: Image.asset(
-                'assets/icons/iconlogout.png',
-                width: 20,
-                height: 20,
-                color: Colors.red,
+          'assets/icons/iconlogout.png',
+          width: 20,
+          height: 20,
+          color: Colors.red,
               ),
               label: const Text('Keluar'),
             ),
           ),
+          const SizedBox(height: 20), // Tambahkan sedikit jarak bawah jika perlu
         ],
       ),
     );

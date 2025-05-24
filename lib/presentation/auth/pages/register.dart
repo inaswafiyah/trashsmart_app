@@ -96,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Pendaftaran berhasil'), backgroundColor: Color(0xFF207A3E)),
+                const SnackBar(content: Text('Pendaftaran berhasil'), backgroundColor: Color(0xFF00973A)),
               );
 
               Navigator.pushReplacement(
@@ -200,7 +200,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               _allFieldsFilled && !_isLoading
-                                  ? const Color(0xFF207A3E)
+                                  ? const Color(0xFF00973A)
                                   : Colors.grey[300],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -246,7 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             TextSpan(
                               text: 'Masuk',
                               style: const TextStyle(
-                                color: Color(0xFF207A3E),
+                                color: Color(0xFF00973A),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

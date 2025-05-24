@@ -3,9 +3,16 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trashsmart/data/datasource/auth_local_datasource.dart';
+import 'package:trashsmart/data/datasource/auth_remote_datasource.dart';
+import 'package:trashsmart/data/model/request/login_request_model.dart';
+import 'package:trashsmart/data/model/request/register_request_model.dart';
 import 'package:trashsmart/data/model/response/auth_response_model.dart';
 import 'package:trashsmart/presentation/auth/pages/register.dart';
-import 'package:trashsmart/widget/bottom.dart'; // Halaman utama setelah login
+import 'package:trashsmart/widget/bottom.dart';
+
+// Import for Firebase & Google Sign-In
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -16,7 +23,10 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool showPassword = false;
-  bool isLoading = false; // Menambahkan variabel untuk mengontrol loading
+  bool isLoading = false; 
+  final _authRemote = AuthRemoteDatasource();
+
+  final String baseUrl = "http://172.20.10.3:8000/";
 
   bool get isFilled =>
       emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
@@ -30,14 +40,9 @@ class _LoginPageState extends State<LoginPage> {
     final password = passwordController.text;
 
     final response = await http.post(
-      Uri.parse('http://172.20.10.3:8000/api/login'),
-      body: jsonEncode({
-        'email': email,
-        'password': password,
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      Uri.parse('${baseUrl}api/login'),
+      body: jsonEncode({'email': email, 'password': password}),
+      headers: {'Content-Type': 'application/json'},
     );
 
     setState(() {
@@ -46,27 +51,175 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      String token = data['token']; 
-      AuthResponseModel user = AuthResponseModel.fromJson(response.body); 
+      String token = data['token'];
+      AuthResponseModel user = AuthResponseModel.fromJson(response.body);
 
       final authLocalDatasource = AuthLocalDatasource();
       await authLocalDatasource.saveAuthData(user);
 
-      // Save the user's password in SharedPreferences
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('password', password);  // Save the password
+      await prefs.setString('password', password);
+      await prefs.setString('token', token);
 
-      await prefs.setString('token', token);  
+      // Ambil avatar dari backend (dari response login)
+      String? avatarPath = user.user?.avatar?.imagePath;
+      if (avatarPath != null && avatarPath.isNotEmpty) {
+        // Gabungkan baseUrl + path avatar
+        String avatarUrl = baseUrl + avatarPath;
+        await prefs.setString('avatar_url', avatarUrl);
+      } else {
+        await prefs.remove('avatar_url');
+      }
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Bottom()), 
+        MaterialPageRoute(builder: (context) => Bottom()),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Login Gagal, periksa email dan password')),
       );
     }
+  }
+
+  // ----------------------
+  // Google Sign In Method
+  // ----------------------
+  Future<void> signInWithGoogle() async {
+    try {
+      await GoogleSignIn().signOut();
+
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      if (googleUser == null) return;
+
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+
+      final user = userCredential.user;
+      if (user != null) {
+        final loginResponse = await _authRemote.login(
+          LoginRequestModel(
+            email: user.email ?? '',
+            password: 'google-${user.uid}',
+          ),
+        );
+
+        loginResponse.fold(
+          (loginError) async {
+            final registerResponse = await _authRemote.register(
+              RegisterRequestModel(
+                email: user.email ?? '',
+                password: 'google-${user.uid}',
+                confirmPassword: 'google-${user.uid}',
+                username: user.email?.split('@')[0] ?? '',
+                phone: user.uid.substring(0, 8),
+              ),
+            );
+            registerResponse.fold(
+              (registerError) =>
+                  _showErrorSnackbar('Gagal Register: $registerError'),
+              (registerData) async {
+                await AuthLocalDatasource().saveAuthData(registerData);
+
+                // Simpan avatar Google jika ada
+                final prefs = await SharedPreferences.getInstance();
+                String? avatarPath = registerData.user?.avatar?.imagePath;
+                if (avatarPath != null && avatarPath.isNotEmpty) {
+                  String avatarUrl = baseUrl + avatarPath;
+                  await prefs.setString('avatar_url', avatarUrl);
+                } else {
+                  await prefs.remove('avatar_url');
+                }
+
+                _showSuccessSnackbar(
+                  'kamu berhasil register dengan akun baru!',
+                );
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const Bottom()),
+                );
+              },
+            );
+          },
+          (loginData) async {
+            await AuthLocalDatasource().saveAuthData(loginData);
+
+            // Simpan avatar Google jika ada
+            final prefs = await SharedPreferences.getInstance();
+            String? avatarPath = loginData.user?.avatar?.imagePath;
+            if (avatarPath != null && avatarPath.isNotEmpty) {
+              String avatarUrl = baseUrl + avatarPath;
+              await prefs.setString('avatar_url', avatarUrl);
+            } else {
+              await prefs.remove('avatar_url');
+            }
+
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const Bottom()),
+            );
+          },
+        );
+      }
+    } catch (e) {
+      _showErrorSnackbar('Gagal Login dengan Google: $e');
+    }
+  }
+
+  void _showSuccessSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle_outline, color: Colors.white),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: const Color(0xFF00973A),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.white),
+            SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.red.shade800,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -84,16 +237,10 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 1),
                   const Text(
                     "Masuk akunmu",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
                   const SizedBox(height: 20),
-                  Image.asset(
-                    'assets/images/logo.png',
-                    height: 60,
-                  ),
+                  Image.asset('assets/images/logo.png', height: 60),
                   const SizedBox(height: 80),
                   _buildTextField(
                     controller: emailController,
@@ -107,9 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                     obscureText: !showPassword,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        showPassword
-                            ? Icons.visibility
-                            : Icons.visibility_off,
+                        showPassword ? Icons.visibility : Icons.visibility_off,
                         color: Colors.grey,
                       ),
                       onPressed: () {
@@ -123,40 +268,63 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: isFilled && !isLoading ? _login : null, // Panggil fungsi login
+                      onPressed: isFilled && !isLoading ? _login : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isFilled
-                            ? const Color(0xFF207A3E)
-                            : Colors.grey[300],
+                        backgroundColor:
+                            isFilled
+                                ? const Color(0xFF00973A)
+                                : Colors.grey[300],
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         disabledBackgroundColor: Colors.grey[300],
                       ),
-                      child: isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
-                          : const Text(
-                              'Masuk',
-                              style: TextStyle(
+                      child:
+                          isLoading
+                              ? const CircularProgressIndicator(
                                 color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
+                              )
+                              : const Text(
+                                'Masuk',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
                     ),
                   ),
+                  const SizedBox(height: 20),
+
+                  // Google Sign In Button (added here)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: signInWithGoogle,
+                      icon: Image.asset(
+                        'assets/icons/google_logo.jpg',
+                        height: 24,
+                      ),
+                      label: const Text('Sign in with Google'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        minimumSize: Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 36),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
                         'Belum memiliki akun? ',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
+                        style: TextStyle(color: Colors.black),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -170,7 +338,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: const Text(
                           'Buat akun',
                           style: TextStyle(
-                            color: Color(0xFF207A3E),
+                            color: Color(0xFF00973A),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -202,33 +370,36 @@ class _LoginPageState extends State<LoginPage> {
         hintText: hintText,
         filled: true,
         fillColor: isFilled ? Colors.white : Colors.grey[200],
-        border: isFilled
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: const BorderSide(color: Colors.black),
-              )
-            : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: BorderSide.none,
-              ),
-        enabledBorder: isFilled
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: const BorderSide(color: Colors.black),
-              )
-            : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: BorderSide.none,
-              ),
-        focusedBorder: isFilled
-            ? OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: const BorderSide(color: Colors.black),
-              )
-            : OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.0),
-                borderSide: BorderSide.none,
-              ), 
+        border:
+            isFilled
+                ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: const BorderSide(color: Colors.black),
+                )
+                : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
+                ),
+        enabledBorder:
+            isFilled
+                ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: const BorderSide(color: Colors.black),
+                )
+                : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
+                ),
+        focusedBorder:
+            isFilled
+                ? OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: const BorderSide(color: Colors.black),
+                )
+                : OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide.none,
+                ),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20.0,
           vertical: 16.0,

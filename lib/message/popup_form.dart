@@ -1,137 +1,72 @@
 import 'package:flutter/material.dart';
+import 'package:trashsmart/widget/bottom.dart';
 
-void main() {
-  runApp(const PopUpMessage());
-}
-
-class PopUpMessage extends StatelessWidget {
-  const PopUpMessage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Popup Demo',
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomePage(),
-        '/beranda': (context) => const MainHomePage(),
-      },
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    Future.delayed(Duration.zero, () {
-      showSuccessPopup(context);
-    });
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Popup Demo'),
-        backgroundColor: const Color(0xFF207A3E),
-      ),
-      body: const Center(
-        child: Text('Halaman Awal'),
-      ),
-    );
-  }
-}
-
-class MainHomePage extends StatelessWidget {
-  const MainHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Beranda'),
-        backgroundColor: const Color(0xFF207A3E),
-      ),
-      body: const Center(
-        child: Text(
-          'Selamat datang di halaman beranda!',
-          style: TextStyle(fontSize: 18),
-        ),
-      ),
-    );
-  }
-}
-
-void showSuccessPopup(BuildContext context) {
-  showDialog(
+// Fungsi untuk menampilkan popup berhasil isi form
+// Mengembalikan Future<bool> yang false saat tombol ditekan
+Future<bool> BerhasilMengisiForm(BuildContext context) {
+  return showDialog<bool>(
     context: context,
     barrierDismissible: false,
-    builder: (context) {
+    builder: (BuildContext context) {
       return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.check_circle,
-                color: Color(0xFF4CAF50),
-                size: 80,
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Data Dirimu Berhasil Disimpan!',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
+              Container(
+                width: 80,
+                height: 80,
+                decoration: const BoxDecoration(
+                  color:  Color(0xFF00973A),
+                  shape: BoxShape.circle,
                 ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'Terima kasih, kamu sudah berhasil',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
+                child: const Icon(
+                  Icons.check,
+                  color: Colors.white,
+                  size: 40,
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: 16),
               const Text(
-                'mengisi data diri',
+                'Berhasil',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
+              const Text(
+                'Data Dirimu Berhasil Disimpan!\nTerima kasih, Kamu sudah,\nberhasil mengisi data diri',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14),
+              ),
+              const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.pushReplacementNamed(context, '/beranda');
+                    Navigator.of(context).pop(false); // Tutup popup dulu
+
+                    // Navigasi ke HomePage dan hapus semua halaman sebelumnya
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const Bottom()),
+                      (route) => false,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF207A3E),
+                    backgroundColor: const Color(0xFF00973A),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
                   child: const Text(
                     'Kembali ke beranda',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -141,5 +76,5 @@ void showSuccessPopup(BuildContext context) {
         ),
       );
     },
-  );
+  ).then((value) => value ?? false);
 }

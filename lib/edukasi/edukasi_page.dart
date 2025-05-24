@@ -30,6 +30,13 @@ class HalamanEdukasiPage extends StatelessWidget {
 
           final videos = snapshot.data!.getOrElse(() => []);
 
+          // Urutkan berdasarkan created_at (atau field tanggal lain dari backend)
+          videos.sort((a, b) {
+            final aDate = DateTime.tryParse(a['created_at'] ?? '') ?? DateTime(2000);
+            final bDate = DateTime.tryParse(b['created_at'] ?? '') ?? DateTime(2000);
+            return bDate.compareTo(aDate); // terbaru di atas
+          });
+
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
@@ -81,15 +88,22 @@ class HalamanEdukasiPage extends StatelessWidget {
                           alignment: Alignment.center,
                           children: [
                             Container(
-                              width: 120,
-                              height: 80,
+                              width: 140,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              clipBehavior: Clip.hardEdge,
-                              child: Image.network(
-                                'https://img.youtube.com/vi/$id/0.jpg',
-                                fit: BoxFit.cover,
+                              clipBehavior: Clip.antiAlias,
+                              child: AspectRatio(
+                                aspectRatio: 16 / 9,
+                                child: Image.network(
+                                  'https://img.youtube.com/vi/$id/0.jpg',
+                                  fit: BoxFit.cover,
+                                  alignment: Alignment.center,
+                                  loadingBuilder: (context, child, progress) =>
+                                      progress == null ? child : const Center(child: CircularProgressIndicator()),
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Container(color: Colors.grey[300]),
+                                ),
                               ),
                             ),
                             Icon(
