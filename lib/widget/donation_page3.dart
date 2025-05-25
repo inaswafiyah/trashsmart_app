@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:trashsmart/maps/posal_map.dart';
 import 'package:trashsmart/widget/form_diri.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,10 +25,10 @@ class _DonasiPage3State extends State<DonasiPage3> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white,),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Donasi', style: TextStyle(color: Colors.white)),
+        title: const Text('Bank Sampah ', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: const Color(0xFF009B3E),
         elevation: 0,
@@ -95,7 +94,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow,
+                        backgroundColor: const Color(0xFFFDC901),
                         foregroundColor: Colors.black,
                         elevation: 2,
                         minimumSize: const Size(0, 40), // tinggi 40, lebar mengikuti SizedBox
@@ -139,7 +138,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
                   _buildSampahDisplay('logam', 'Logam'),
                   _buildSampahDisplay('organik', 'Organik'),
                   _buildSampahDisplay('tekstil', 'Tekstil'),
-                  _buildSampahDisplay('kaca', 'Kaca'),
+                  _buildSampahDisplay( 'kaca', 'Kaca'),
                   _buildSampahDisplay('jelantah', 'Jelantah'),
                 ],
               ),
@@ -171,7 +170,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
                     ),
                   ),
                   child: const Text(
-                    'Donasi Sekarang',
+                    'Tukar Sekarang',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),

@@ -79,7 +79,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           children: [
             // Player utama
             Container(
@@ -100,8 +100,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: AspectRatio(aspectRatio: 16 / 9, child: player),
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          bottomLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                          bottomRight: Radius.circular(12),
+                        ),
+                    child: AspectRatio(
+                      aspectRatio: 16 / 9,
+                      child: player,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(

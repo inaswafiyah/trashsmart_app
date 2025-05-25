@@ -88,7 +88,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                       onTap: () async {
                         final pref = await SharedPreferences.getInstance();
                         final token = pref.getString('token');
-                        await http.post(
+                        final response = await http.post(
                           Uri.parse('${Variable.baseUrl}/api/update-avatar'),
                           headers: {
                             'Authorization': 'Bearer $token',
@@ -96,11 +96,24 @@ class _ProfilePagesState extends State<ProfilePages> {
                           },
                           body: jsonEncode({'avatar_id': avatar['id']}),
                         );
-                        await pref.setString('avatar_url', path);
-                        setState(() {
-                          _avatarUrl = path;
-                          _selectedAvatar = avatar['id'];
-                        });
+                        if (response.statusCode == 200) {
+                          // Ambil user terbaru dari response
+                          final userData = jsonDecode(response.body)['user'];
+                          final newAvatarPath = userData['avatar']['image_path'];
+                          final newAvatarUrl = '${Variable.baseUrl}/$newAvatarPath';
+                          await pref.setString('avatar_url', newAvatarUrl);
+                          // Simpan juga data user terbaru jika perlu
+                          final authData = pref.getString('auth_data');
+                          if (authData != null) {
+                            final authJson = jsonDecode(authData);
+                            authJson['user']['avatar'] = userData['avatar'];
+                            await pref.setString('auth_data', jsonEncode(authJson));
+                          }
+                          setState(() {
+                            _avatarUrl = newAvatarUrl;
+                            _selectedAvatar = avatar['id'];
+                          });
+                        }
                         Navigator.pop(context);
                       },
                       child: Container(
@@ -207,7 +220,7 @@ class _ProfilePagesState extends State<ProfilePages> {
               children: [
                 _buildProfileItem(
                   iconPath: 'assets/icons/iconprofile.png',
-                  label: 'Edit Akun',
+                  label: 'Edit Profile',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -229,7 +242,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                 const SizedBox(height: 24),
                 _buildProfileItem(
                   iconPath: 'assets/icons/icondonasi.png',
-                  label: 'Progres Donasi',
+                  label: 'Progres Penukaran',
                   onTap: () {
                     Navigator.push(
                       context,
@@ -264,7 +277,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                 height: 20,
                 color: Colors.red,
               ),
-              label: const Text('Keluar'),
+              label: const Text('Keluar', style: TextStyle(fontWeight: FontWeight.bold),),
             ),
           ),
           const SizedBox(height: 20), // Tambahkan sedikit jarak bawah jika perlu

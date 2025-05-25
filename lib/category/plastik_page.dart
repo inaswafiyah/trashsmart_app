@@ -128,7 +128,7 @@ class _PlastikDetailPageState extends State<PlastikDetailPage> {
                                               ),
                                               shadowColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.4)),
                                             ),
-                                            child: const Text("Donasi Sekarang"),
+                                            child: const Text("Tukar Sekarang"),
                                           ),
                                         ),
                                         const SizedBox(height: 16),
@@ -219,7 +219,7 @@ class _PlastikDetailPageState extends State<PlastikDetailPage> {
             ),
             SizedBox(height: 8),
             Text(
-              "Yuk, Donasikan Sekarang!",
+              "Yuk, Tukarkan Sekarang!",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],

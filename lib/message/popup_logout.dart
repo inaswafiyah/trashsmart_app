@@ -85,9 +85,9 @@ class PopupLogout extends StatelessWidget {
 
   Future<void> logout(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('avatar_url'); // Hapus avatar
     await prefs.remove('auth_data');  // Hapus data user lain jika perlu
     await prefs.remove('token');      // Hapus token login jika ada
+    await prefs.remove('avatar_url');
 
     Navigator.pop(context);
 

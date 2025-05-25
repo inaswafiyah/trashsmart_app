@@ -40,7 +40,7 @@ class DonasiPage2 extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Donasi', style: TextStyle(color: Colors.white)),
+        title: const Text('Bank Sampah', style: TextStyle(color: Colors.white)),
         centerTitle: true,
         backgroundColor: const Color(0xFF00973A),
         elevation: 0,
@@ -180,7 +180,7 @@ class DonasiPage2 extends StatelessWidget {
                     ),
                   ),
                   child: const Text(
-                    'Donasi Sekarang',
+                    'Tukar Sekarang',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),

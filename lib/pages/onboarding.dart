@@ -17,17 +17,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'image': 'assets/images/onboard1.png',
       'title': 'Selamat datang di Trashsmart',
-      'desc': '“Bersama kita wujudkan dunia yang lebih bersih dan berkelanjutan."',
+      'desc': '“Bersama kita wujudkan dunia yang lebih\nbersih dan berkelanjutan."',
     },
     {
       'image': 'assets/images/onboard2.png',
       'title': 'Jadilah bagian dari perubahan!',
-      'desc': 'Temukan cara mudah untuk mendaur ulang, mengurangi limbah, dan mendukung lingkungan.',
+      'desc': 'Temukan cara mudah untuk mendaur ulang, mengurangi limbah, dan mendukung\nlingkungan.',
     },
     {
       'image': 'assets/images/onboard3.png',
       'title': 'Bersama kita membuat dampak nyata!',
-      'desc': 'Langkah kecilmu hari ini bisa jadi amal jariyah. Yuk, donasi sampah, dan bantu wujudkan perubahan besar.',
+      'desc': 'Mulai dari langkah kecil, Wujudkan perubahan.\nManfaatkan bank sampah!',
     },
   ];
 
@@ -77,7 +77,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemBuilder: (context, index) {
                   final item = onboardingData[index];
                   return Padding(
-                    padding: const EdgeInsets.all(24.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0), // lebih kecil dari 24
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -86,9 +86,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Text(
                           item['title']!,
                           style: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 15, // lebih kecil agar muat
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF207A3E),
+                            color: Color(0xFF062F0B),
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -98,6 +98,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           style: const TextStyle(
                             fontSize: 12,
                             color: Colors.black87,
+                            fontWeight: FontWeight.w500,
                           ),
                           textAlign: TextAlign.center,
                         ),

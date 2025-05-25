@@ -147,7 +147,7 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                                         shadowColor: MaterialStateProperty.all(
                                             Colors.grey.withOpacity(0.4)),
                                       ),
-                                      child: const Text("Donasi Sekarang"),
+                                      child: const Text("Tukar Sekarang"),
                                     ),
                                   ),
                                   const SizedBox(height: 32),
@@ -228,7 +228,7 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
             "Jelantahmu Berharga! Mulai dari Rp3.000/liter, donasikan dan selamatkan lingkungan!",
           ),
           SizedBox(height: 8),
-          Text("Yuk, Donasikan Sekarang!",
+          Text("Yuk, Tukarkan Sekarang!",
               style: TextStyle(fontWeight: FontWeight.bold)),
         ]),
       ],

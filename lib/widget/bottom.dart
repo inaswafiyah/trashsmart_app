@@ -69,9 +69,9 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(0, 'assets/icons/beranda.png', 'Beranda'),
-              _buildNavItem(1, 'assets/icons/donasi.png', 'Donasi'),
+              _buildNavItem(1, 'assets/icons/donasi.png', 'Bank Sampah'),
               _buildNavItem(2, 'assets/icons/edukasi.png', 'Edukasi'),
-              _buildNavItem(3, 'assets/icons/profile.png', 'Akun'),
+              _buildNavItem(3, 'assets/icons/profile.png', 'Profile'),
             ],
           ),
         ),

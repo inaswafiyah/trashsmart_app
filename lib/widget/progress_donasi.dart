@@ -46,8 +46,9 @@ class _ProgresDonasiPageState extends State<ProgresDonasiPage> {
         centerTitle: true,
         iconTheme: const IconThemeData(color: Colors.black),
         title: const Text(
-          'Progres Donasi',
+          'Progres Penukaranmu',
           style: TextStyle(
+            fontSize: 20,
             color: Colors.black,
             fontWeight: FontWeight.normal,
           ),
@@ -68,7 +69,7 @@ class _ProgresDonasiPageState extends State<ProgresDonasiPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Progres Donasimu',
+                  'Progres Penukaranmu',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -149,7 +150,7 @@ class _ProgresDonasiPageState extends State<ProgresDonasiPage> {
                   ),
                   const SizedBox(width: 12),
                   Text(
-                    'Total Donasi: ${isLoadingDonasi ? "..." : "$totalDonasi"}',
+                    'Total Bintang: ${isLoadingDonasi ? "..." : "$totalDonasi"}',
                     style: const TextStyle(fontSize: 16),
                   ),
                 ],

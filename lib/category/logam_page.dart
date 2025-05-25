@@ -143,7 +143,7 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
                                                   Colors.grey.withOpacity(0.4),
                                                 ),
                                               ),
-                                              child: const Text("Donasi Sekarang"),
+                                              child: const Text("Tukar Sekarang"),
                                             ),
                                           ),
                                         ),
@@ -234,7 +234,7 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
         _buildCardArtikel(children: const [
           Text("Logammu Bernilai Tinggi! Mulai dari Rp5.000/kg — donasikan dan raih manfaatnya!"),
           SizedBox(height: 10),
-          Text("Yuk, Donasikan Sekarang!",
+          Text("Yuk, Tukarkan Sekarang!",
               style: TextStyle(fontWeight: FontWeight.bold)),
         ]),
       ],

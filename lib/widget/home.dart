@@ -8,6 +8,7 @@ import 'package:trashsmart/category/logam_page.dart';
 import 'package:trashsmart/category/organik_page.dart';
 import 'package:trashsmart/category/plastik_page.dart';
 import 'package:trashsmart/category/tekstil_page.dart';
+import 'package:trashsmart/core/constants/variable.dart';
 import 'package:trashsmart/data/datasource/auth_local_datasource.dart';
 import 'package:trashsmart/data/datasource/auth_remote_datasource.dart';
 import 'package:trashsmart/edukasi/video_player.dart';
@@ -42,8 +43,15 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   try {
     final authData = await AuthLocalDatasource().getAuthData();
     final prefs = await SharedPreferences.getInstance();
-    final avatar = prefs.getString('avatar_url');
+    String? avatar;
     if (authData.user != null && authData.user!.username != null) {
+      // Ambil dari data user jika ada avatar
+      if (authData.user!.avatar != null && authData.user!.avatar!.imagePath != null) {
+        avatar = '${Variable.baseUrl}/${authData.user!.avatar!.imagePath}';
+        await prefs.setString('avatar_url', avatar); // update cache
+      } else {
+        avatar = prefs.getString('avatar_url');
+      }
       if (!mounted) return;
       setState(() {
         username = authData.user!.username!;
@@ -140,7 +148,12 @@ Future<void> _loadTotalDonasi() async {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Text("Ubah sampahmu menjadi Berkah"),
+                    const Text(
+                      "Ubah sampahmu menjadi Berkah",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
                 GestureDetector(
@@ -148,7 +161,7 @@ Future<void> _loadTotalDonasi() async {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => ProfilePages()));
                   },
                   child: CircleAvatar(
-                    radius: 22,
+                    radius: 30, // avatar profile lebih besar
                     backgroundColor: Colors.green,
                     backgroundImage: (avatarUrl != null && avatarUrl!.isNotEmpty)
                         ? NetworkImage(avatarUrl!)
@@ -156,14 +169,9 @@ Future<void> _loadTotalDonasi() async {
                     child: (avatarUrl == null || avatarUrl!.isEmpty)
                         ? Text(
                             username.isNotEmpty ? username[0].toUpperCase() : "U",
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 28),
                           )
                         : null,
-                    // Tambahkan errorBuilder jika pakai Image.network
-                    // child: Image.network(
-                    //   avatarUrl!,
-                    //   errorBuilder: (context, error, stackTrace) => Icon(Icons.error),
-                    // ),
                   ),
                 ),
               ],
@@ -172,34 +180,56 @@ Future<void> _loadTotalDonasi() async {
 
             // Progres Donasi
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.green,
-                borderRadius: BorderRadius.circular(16),
+                color: Color(0xFF00973A),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Progres Donasimu",
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
+                  const Text(
+                    "Progres Penukaranmu",
+                    style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Icon(Icons.star, color: Colors.yellow, size: 40),
+                      const Icon(Icons.star, color: Color(0xFFFDC901), size: 62), // bintang besar
                       const SizedBox(width: 8),
                       Text(
-                        isLoadingDonasi ? ".." : "$totalDonasi", // Ubah di sini
-                        style: const TextStyle(color: Colors.white, fontSize: 36, fontWeight: FontWeight.bold),
+                        isLoadingDonasi ? ".." : "$totalDonasi",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(width: 8),
-                      const Text("Total Donasimu", style: TextStyle(color: Colors.white, fontSize: 16)),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          "Total Bintangmu",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
                   const Divider(color: Color(0xFFFDC901), thickness: 2),
-                  const SizedBox(height: 8),
-                  const Text("Kumpulkan bintang, wujudkan kebaikan!",
-                      style: TextStyle(color: Colors.white)),
+                  const SizedBox(height: 16),
+                  const Text(
+                    "Kumpulkan bintang, wujudkan kebaikan!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),

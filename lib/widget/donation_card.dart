@@ -22,7 +22,7 @@ class DonasiCard extends StatelessWidget {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
-            'Donasi',
+            'Bank Sampah',
             style: TextStyle(color: Colors.white),
           ),
         ),

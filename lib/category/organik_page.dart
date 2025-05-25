@@ -128,7 +128,7 @@ class _OrganikDetailPageState extends State<OrganikDetailPage> {
                                               ),
                                               shadowColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.4)),
                                             ),
-                                            child: const Text("Donasi Sekarang"),
+                                            child: const Text("Tukar Sekarang"),
                                           ),
                                         ),
                                         const SizedBox(height: 16),
@@ -248,7 +248,7 @@ class _OrganikDetailPageState extends State<OrganikDetailPage> {
             Text("Sampah organikmu mulai dari\nRp500/kg."),
             SizedBox(height: 8),
             Text(
-              "Yuk, Donasikan Sekarang!",
+              "Yuk, Tukarkan Sekarang!",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ],

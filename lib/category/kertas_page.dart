@@ -144,7 +144,7 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
                                                   Colors.grey.withOpacity(0.4),
                                                 ),
                                               ),
-                                              child: const Text("Donasi Sekarang"),
+                                              child: const Text("Tukar Sekarang"),
                                             ),
                                           ),
                                         ),
@@ -226,7 +226,7 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
           children: [
             Text("Jangan buang kertas sembarangan! Tukar mulai Rp1.500/kg dan bantu bumi!"),
             SizedBox(height: 10),
-            Text("Yuk, Donasikan Sekarang!", style: TextStyle(fontWeight: FontWeight.bold)),          
+            Text("Yuk, Tukarkan Sekarang!", style: TextStyle(fontWeight: FontWeight.bold)),          
           ],
         )),
       ],
