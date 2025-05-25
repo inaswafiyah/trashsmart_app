@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:trashsmart/data/datasource/auth_local_datasource.dart';
 import 'package:trashsmart/message/popup_form.dart';
+import 'package:trashsmart/core/constants/variable.dart'; // Tambahkan import ini
 
 class FormPage extends StatefulWidget {
   final String kategoriTerpilih;
@@ -81,7 +82,7 @@ class _FormPageState extends State<FormPage> {
     try {
       final authData = await authLocalDatasource.getAuthData();
       final token = authData.token ?? '';
-      final baseUrl = 'http://172.20.10.3:8000';
+      final baseUrl = Variable.baseUrl; // Ganti ke Variable.baseUrl
 
       if (token.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(

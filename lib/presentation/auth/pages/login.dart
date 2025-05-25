@@ -9,6 +9,7 @@ import 'package:trashsmart/data/model/request/register_request_model.dart';
 import 'package:trashsmart/data/model/response/auth_response_model.dart';
 import 'package:trashsmart/presentation/auth/pages/register.dart';
 import 'package:trashsmart/widget/bottom.dart';
+import 'package:trashsmart/core/constants/variable.dart'; // Tambahkan import ini
 
 // Import for Firebase & Google Sign-In
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false; 
   final _authRemote = AuthRemoteDatasource();
 
-  final String baseUrl = "http://172.20.10.3:8000/";
+  final String baseUrl = Variable.baseUrl; // Ganti ke Variable.baseUrl
 
   bool get isFilled =>
       emailController.text.isNotEmpty && passwordController.text.isNotEmpty;
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
     final password = passwordController.text;
 
     final response = await http.post(
-      Uri.parse('${baseUrl}api/login'),
+      Uri.parse('$baseUrl/api/login'),
       body: jsonEncode({'email': email, 'password': password}),
       headers: {'Content-Type': 'application/json'},
     );

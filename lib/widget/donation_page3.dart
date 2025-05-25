@@ -3,14 +3,17 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:trashsmart/maps/posal_map.dart';
 import 'package:trashsmart/widget/form_diri.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DonasiPage3 extends StatefulWidget {
   final String bankSampahNama;
   final String bankSampahAlamat;
+  final String mapsUrl;
   const DonasiPage3({
     super.key,
     required this.bankSampahNama,
     required this.bankSampahAlamat,
+    required this.mapsUrl,
   });
 
   @override
@@ -40,7 +43,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
               height: 200,
               child: FlutterMap(
                 options: MapOptions(
-                  initialCenter: LatLng(-6.5036956, 107.0473927), // Koordinat default
+                  initialCenter: LatLng(-6.200000, 106.816666), // gunakan data dinamis
                   initialZoom: 17.0,
                 ),
                 children: [
@@ -52,7 +55,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
                   MarkerLayer(
                     markers: [
                       Marker(
-                        point: LatLng(-6.5036956, 107.0473927),
+                        point: LatLng(-6.200000, 106.816666), // gunakan data dinamis
                         width: 40,
                         height: 40,
                         child: const Icon(
@@ -83,30 +86,34 @@ class _DonasiPage3State extends State<DonasiPage3> {
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
-                    width: 110,
+                    width: 130, // Lebar sesuai gambar, bisa diubah 120-140 sesuai selera
                     child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MapPage(),
-                          ),
-                        );
+                      onPressed: () async {
+                        final url = widget.mapsUrl;
+                        if (url.isNotEmpty && await canLaunch(url)) {
+                          await launch(url);
+                        }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF009B3E),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 8,
-                        ),
+                        backgroundColor: Colors.yellow,
+                        foregroundColor: Colors.black,
                         elevation: 2,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                        minimumSize: const Size(0, 40), // tinggi 40, lebar mengikuti SizedBox
+                        padding: EdgeInsets.zero, // padding nol agar tidak melebar
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        textStyle: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
                         ),
                       ),
                       child: const Text(
                         'Lihat Maps',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                          color: Colors.black, // text hitam
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -150,7 +157,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => FormPage(
-                          kategoriTerpilih: '', // kosong, biar user pilih sendiri di form
+                          kategoriTerpilih: '',
                           bankSampahNama: widget.bankSampahNama,
                           bankSampahAlamat: widget.bankSampahAlamat,
                         ),

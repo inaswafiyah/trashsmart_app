@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trashsmart/presentation/auth/bloc/bank/bank_bloc.dart';
 import 'package:trashsmart/presentation/auth/bloc/bank/bank_event.dart';
 import 'package:trashsmart/presentation/auth/bloc/bank/bank_state.dart';
-import 'package:trashsmart/data/datasource/bank_remote_datasource.dart'; // Tambahkan ini
+import 'package:trashsmart/data/datasource/bank_remote_datasource.dart';
 import 'package:trashsmart/widget/form_diri.dart';
 import 'donation_page.dart';
 import 'donation_page2.dart';
@@ -15,8 +15,7 @@ class DonasiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => BankBloc(BankRemoteDataSource()) // Perbaiki inisialisasi
-        ..add(LoadBankSampah()),
+      create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: const Color(0xFF00973A),
@@ -78,7 +77,7 @@ class DonasiCard extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    bank.bankSampahNama ?? '-', // null safety
+                                    bank.bankSampahNama ?? '-',
                                     style: const TextStyle(
                                       fontWeight: FontWeight.w600,
                                       fontSize: 13,
@@ -86,7 +85,7 @@ class DonasiCard extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    bank.bankSampahAlamat ?? '-', // null safety
+                                    bank.bankSampahAlamat ?? '-',
                                     style: const TextStyle(fontSize: 11),
                                   ),
                                   const Spacer(),
@@ -98,6 +97,7 @@ class DonasiCard extends StatelessWidget {
                                           builder: (_) => DonasiPage3(
                                             bankSampahNama: bank.bankSampahNama ?? '-',
                                             bankSampahAlamat: bank.bankSampahAlamat ?? '-',
+                                            mapsUrl: bank.mapsUrl ?? '',
                                           ),
                                         ),
                                       );

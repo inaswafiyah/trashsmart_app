@@ -4,14 +4,24 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 class KowasaPage extends StatefulWidget {
-  const KowasaPage({super.key});
+  final String nama;
+  final String alamat;
+  final double latitude;
+  final double longitude;
+
+  const KowasaPage({
+    super.key,
+    required this.nama,
+    required this.alamat,
+    required this.latitude,
+    required this.longitude,
+  });
 
   @override
   State<KowasaPage> createState() => _KowasaPageState();
 }
 
 class _KowasaPageState extends State<KowasaPage> {
-  final LatLng lokasiBankSampah = LatLng(-6.5036956, 107.0473927);
   LatLng? posisiUser;
   double? _jarak;
 
@@ -42,8 +52,8 @@ class _KowasaPageState extends State<KowasaPage> {
     double jarak = Geolocator.distanceBetween(
       posisi.latitude,
       posisi.longitude,
-      lokasiBankSampah.latitude,
-      lokasiBankSampah.longitude,
+      widget.latitude,
+      widget.longitude,
     );
 
     setState(() {
@@ -54,6 +64,7 @@ class _KowasaPageState extends State<KowasaPage> {
 
   @override
   Widget build(BuildContext context) {
+    final lokasiBankSampah = LatLng(widget.latitude, widget.longitude);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Detail Lokasi"),
@@ -104,15 +115,15 @@ class _KowasaPageState extends State<KowasaPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  'Bank Sampah Kowasa',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                Text(
+                  widget.nama,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Jl. Raya Jonggol-Dayeuh No.19, Sukasirna Kec. Jonggol\nKab. Bogor Jawa Barat 16830',
-                  style: TextStyle(color: Colors.black54),
+                Text(
+                  widget.alamat,
+                  style: const TextStyle(color: Colors.black54),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
