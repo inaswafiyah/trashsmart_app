@@ -215,8 +215,6 @@ class _OrganikDetailPageState extends State<OrganikDetailPage> {
             Text("• Tinja hewan"),
             Text("• Daging matang"),
             Text("• Kertas berminyak"),
-            SizedBox(height: 8),
-            Text("⚠ Jangan campur dengan plastik atau bahan kimia!"),
           ],
         )),
         const SizedBox(height: 12),

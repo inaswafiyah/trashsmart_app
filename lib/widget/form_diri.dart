@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:trashsmart/data/datasource/auth_local_datasource.dart';
 import 'package:trashsmart/message/popup_form.dart';
-import 'package:trashsmart/core/constants/variable.dart'; // Tambahkan import ini
+import 'package:trashsmart/core/constants/variable.dart';
+import 'package:trashsmart/message/resi_form.dart';
 
 class FormPage extends StatefulWidget {
   final String kategoriTerpilih;
@@ -42,11 +43,15 @@ class _FormPageState extends State<FormPage> {
 
   final AuthLocalDatasource authLocalDatasource = AuthLocalDatasource();
 
+  late final String? lockedCategory;
+
   @override
   void initState() {
     super.initState();
-    if (widget.kategoriTerpilih.isNotEmpty) {
-      selectedCategories.add(widget.kategoriTerpilih);
+    // Jika kategoriTerpilih kosong, berarti user bebas pilih kategori
+    lockedCategory = widget.kategoriTerpilih.isNotEmpty ? widget.kategoriTerpilih : null;
+    if (lockedCategory != null) {
+      selectedCategories.add(lockedCategory!);
     }
   }
 
@@ -75,14 +80,12 @@ class _FormPageState extends State<FormPage> {
       return;
     }
 
-    final category = filteredCategories.first;
-
     late BuildContext dialogContext;
 
     try {
       final authData = await authLocalDatasource.getAuthData();
       final token = authData.token ?? '';
-      final baseUrl = Variable.baseUrl; // Ganti ke Variable.baseUrl
+      final baseUrl = Variable.baseUrl;
 
       if (token.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -97,10 +100,12 @@ class _FormPageState extends State<FormPage> {
         "name": nameController.text.trim(),
         "phone": phoneController.text.trim(),
         "jumlah_sampah": jumlahSampahText,
-        "category": category,
+        "category": filteredCategories, // List<String>
         "bank_sampah_nama": widget.bankSampahNama,
         "bank_sampah_alamat": widget.bankSampahAlamat,
       };
+
+      print(jsonEncode(body)); // cek output di debug console
 
       showDialog(
         context: context,
@@ -115,6 +120,7 @@ class _FormPageState extends State<FormPage> {
         url,
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Bearer $token',
         },
         body: jsonEncode(body),
@@ -125,10 +131,18 @@ class _FormPageState extends State<FormPage> {
       }
 
       if (response.statusCode == 201) {
-        final bool kembaliKeBeranda = await BerhasilMengisiForm(context);
-        if (kembaliKeBeranda) {
-          Navigator.of(context).pop();
-        }
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => ResiPenyerahanPage(
+              nama: nameController.text.trim(),
+              noTelepon: phoneController.text.trim(),
+              tanggalDropOff: DateTime.now().toString().substring(0, 10),
+              jenisSampah: selectedCategories.join(', '),
+              bankSampahNama: widget.bankSampahNama,
+              bankSampahAlamat: widget.bankSampahAlamat,
+            ),
+          ),
+        );
       } else {
         try {
           final resBody = jsonDecode(response.body);
@@ -223,39 +237,68 @@ class _FormPageState extends State<FormPage> {
       List<Widget> rowItems = [];
 
       for (int j = i; j < i + 3 && j < categories.length; j++) {
+        final isLocked = lockedCategory != null && categories[j] == lockedCategory;
+        final isDisabled = lockedCategory != null && categories[j] != lockedCategory;
+        final isChecked = selectedCategories.contains(categories[j]);
+
         rowItems.add(
           Expanded(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Checkbox(
-                    value: selectedCategories.contains(categories[j]),
-                    activeColor: primaryColor,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    onChanged: (bool? selected) {
+            child: GestureDetector(
+              onTap: isDisabled
+                  ? null
+                  : () {
                       setState(() {
-                        if (selected == true) {
-                          if (categories[j].isNotEmpty) {
+                        if (lockedCategory == null) {
+                          // Multi select: tambah/hapus kategori
+                          if (isChecked) {
+                            selectedCategories.remove(categories[j]);
+                          } else {
                             selectedCategories.add(categories[j]);
                           }
                         } else {
-                          selectedCategories.remove(categories[j]);
+                          // Single select: hanya satu kategori (dari artikel)
+                          selectedCategories.clear();
+                          selectedCategories.add(categories[j]);
                         }
                       });
                     },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: isChecked
+                          ? Color(0xFF0A7C36)
+                          : Color(0xFFF5F5F5),
+                      border: Border.all(
+                        color: Color(0xFFAEA9B1),
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: isChecked
+                        ? Icon(
+                            Icons.check,
+                            size: 16,
+                            color: Colors.white,
+                          )
+                        : null,
                   ),
-                ),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Text(
-                    categories[j],
-                    overflow: TextOverflow.visible,
+                  const SizedBox(width: 4),
+                  Flexible(
+                    child: Text(
+                      categories[j],
+                      overflow: TextOverflow.visible,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

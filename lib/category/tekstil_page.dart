@@ -227,7 +227,6 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
           Text("• Terkena bahan kimia"),
           Text("• Sangat kotor atau berjamur"),
           Text("• Campur logam/plastik yang sulit\n  dipisah"),
-          Text("⚠ Lepas kancing & resleting sebelum didaur ulang!"),
         ]),
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [

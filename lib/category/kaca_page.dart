@@ -221,11 +221,6 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
             Text("• Cermin, kaca oven/microwave"),
             Text("• Bohlam & lampu neon"),
             Text("• Kaca bercampur logam/plastik"),
-            SizedBox(height: 8),
-            Text(
-              "⚠ Pisahkan dan bungkus pecahan agar aman!",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
           ],
         ),
         const SizedBox(height: 12),

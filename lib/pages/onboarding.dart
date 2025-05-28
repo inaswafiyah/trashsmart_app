@@ -27,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'image': 'assets/images/onboard3.png',
       'title': 'Bersama kita membuat dampak nyata!',
-      'desc': 'Mulai dari langkah kecil, Wujudkan perubahan.\nManfaatkan bank sampah!',
+      'desc': 'Mulai dari langkah kecil, Wujudkan perubahan.\nSetor sampah makin mudah dengan fitur drop-off!',
     },
   ];
 

@@ -205,7 +205,7 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
             "Jelantah adalah minyak goreng bekas yang sudah digunakan berkali-kali. Biasanya warnanya menggelap dan kualitasnya menurun.",
           ),
           SizedBox(height: 8),
-          Text("⚠ Bahaya Jika Dibuang Sembarangan:",
+          Text("Dampak membuang jelantah sembarangan:",
               style: TextStyle(fontWeight: FontWeight.bold)),
           SizedBox(height: 8),
           Text("• Menyumbat saluran air"),

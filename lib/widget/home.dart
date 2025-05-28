@@ -12,10 +12,8 @@ import 'package:trashsmart/core/constants/variable.dart';
 import 'package:trashsmart/data/datasource/auth_local_datasource.dart';
 import 'package:trashsmart/data/datasource/auth_remote_datasource.dart';
 import 'package:trashsmart/edukasi/video_player.dart';
-import 'package:trashsmart/data/model/response/auth_response_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trashsmart/widget/profile.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HalamanUtama extends StatefulWidget {
   const HalamanUtama({super.key});
@@ -26,7 +24,9 @@ class HalamanUtama extends StatefulWidget {
 
 class _HalamanUtamaState extends State<HalamanUtama> {
   int totalDonasi = 0;
-  bool isLoadingDonasi = true; // Tambahkan ini
+  bool isLoadingDonasi = true;
+  bool isLoadingUser = true; // Tambahkan ini
+  bool isLoadingVideos = true; // Tambahkan ini
   String username = "User";
   String? avatarUrl;
   List<Map<String, dynamic>> sortedVideos = [];
@@ -40,75 +40,77 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   }
 
   Future<void> _loadUserData() async {
-  try {
-    final authData = await AuthLocalDatasource().getAuthData();
-    final prefs = await SharedPreferences.getInstance();
-    String? avatar;
-    if (authData.user != null && authData.user!.username != null) {
-      // Ambil dari data user jika ada avatar
-      if (authData.user!.avatar != null && authData.user!.avatar!.imagePath != null) {
-        avatar = '${Variable.baseUrl}/${authData.user!.avatar!.imagePath}';
-        await prefs.setString('avatar_url', avatar); // update cache
+    setState(() { isLoadingUser = true; }); // Mulai loading
+    try {
+      final authData = await AuthLocalDatasource().getAuthData();
+      final prefs = await SharedPreferences.getInstance();
+      String? avatar;
+      if (authData.user != null && authData.user!.username != null) {
+        // Ambil dari data user jika ada avatar
+        if (authData.user!.avatar != null && authData.user!.avatar!.imagePath != null) {
+          avatar = '${Variable.baseUrl}/${authData.user!.avatar!.imagePath}';
+          await prefs.setString('avatar_url', avatar); // update cache
+        } else {
+          avatar = prefs.getString('avatar_url');
+        }
+        if (!mounted) return;
+        setState(() {
+          username = authData.user!.username!;
+          avatarUrl = avatar;
+          isLoadingUser = false; // Selesai loading
+        });
       } else {
-        avatar = prefs.getString('avatar_url');
+        setState(() { isLoadingUser = false; });
       }
+    } catch (e) {
+      print('Error loading user data: $e');
+      setState(() { isLoadingUser = false; });
+    }
+  }
+
+  Future<void> _loadVideos() async {
+    setState(() { isLoadingVideos = true; }); // Mulai loading
+    final result = await AuthRemoteDatasource().getAllVideos();
+    result.fold(
+      (error) {
+        print("Gagal ambil video: $error");
+        setState(() { isLoadingVideos = false; });
+      },
+      (videos) {
+        videos.sort((a, b) {
+          final aDate = DateTime.tryParse(a['created_at'] ?? '') ?? DateTime.now();
+          final bDate = DateTime.tryParse(b['created_at'] ?? '') ?? DateTime.now();
+          return bDate.compareTo(aDate);
+        });
+        if (!mounted) return;
+        setState(() {
+          sortedVideos = videos;
+          isLoadingVideos = false; // Selesai loading
+        });
+      },
+    );
+  }
+
+  Future<void> _loadTotalDonasi() async {
+    if (!mounted) return;
+    setState(() {
+      isLoadingDonasi = true;
+    });
+    try {
+      final total = await AuthRemoteDatasource().getTotalDonasi();
       if (!mounted) return;
       setState(() {
-        username = authData.user!.username!;
-        avatarUrl = avatar;
+        totalDonasi = total;
+        isLoadingDonasi = false;
+      });
+    } catch (e) {
+      print('Error loading total donasi: $e');
+      if (!mounted) return;
+      setState(() {
+        isLoadingDonasi = false;
       });
     }
-  } catch (e) {
-    print('Error loading user data: $e');
   }
-}
-
-Future<void> _loadVideos() async {
-  print("Mulai load videos");
-  final result = await AuthRemoteDatasource().getAllVideos();
-  print("Selesai getAllVideos");
-  result.fold(
-    (error) => print("Gagal ambil video: $error"),
-    (videos) {
-      print("Videos didapat, jumlah: ${videos.length}");
-      videos.sort((a, b) {
-        final aDate = DateTime.tryParse(a['created_at'] ?? '') ?? DateTime.now();
-        final bDate = DateTime.tryParse(b['created_at'] ?? '') ?? DateTime.now();
-        return bDate.compareTo(aDate);
-      });
-      if (!mounted) {
-        print("Widget sudah tidak mounted, return");
-        return;
-      }
-      print("Sebelum setState");
-      setState(() {
-        sortedVideos = videos;
-      });
-      print("SetState selesai");
-    },
-  );
-}
-
-Future<void> _loadTotalDonasi() async {
-  if (!mounted) return;
-  setState(() {
-    isLoadingDonasi = true;
-  });
-  try {
-    final total = await AuthRemoteDatasource().getTotalDonasi();
-    if (!mounted) return;
-    setState(() {
-      totalDonasi = total;
-      isLoadingDonasi = false;
-    });
-  } catch (e) {
-    print('Error loading total donasi: $e');
-    if (!mounted) return;
-    setState(() {
-      isLoadingDonasi = false;
-    });
-  }
-}
 
   String _youtubeVideoId(String url) {
     final uri = Uri.parse(url);
@@ -128,6 +130,16 @@ Future<void> _loadTotalDonasi() async {
 
   @override
   Widget build(BuildContext context) {
+    // Jika masih loading user atau video, tampilkan loading
+    if (isLoadingUser || isLoadingVideos) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -157,11 +169,12 @@ Future<void> _loadTotalDonasi() async {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => ProfilePages()));
+                  onTap: () async {
+                    await Navigator.push(context, MaterialPageRoute(builder: (_) => ProfilePages()));
+                    await _loadUserData();
                   },
                   child: CircleAvatar(
-                    radius: 30, // avatar profile lebih besar
+                    radius: 30,
                     backgroundColor: Colors.green,
                     backgroundImage: (avatarUrl != null && avatarUrl!.isNotEmpty)
                         ? NetworkImage(avatarUrl!)

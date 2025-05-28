@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trashsmart/message/popup_logout.dart';
 import 'package:trashsmart/data/model/response/auth_response_model.dart';
+import 'package:trashsmart/profile/riwayat_penukaran.dart';
 import 'package:trashsmart/widget/edit_password.dart';
 import 'package:trashsmart/widget/edit_profile.dart';
-import 'package:trashsmart/widget/progress_donasi.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:trashsmart/core/constants/variable.dart';
@@ -21,12 +21,20 @@ class _ProfilePagesState extends State<ProfilePages> {
   String? _avatarUrl;
   int? _selectedAvatar;
   List<dynamic> _avatars = [];
+  bool isAvatarLoading = false;
+  bool isLoadingProfile = true; // Tambahkan ini
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
-    _fetchAvatars();
+    _initProfile();
+  }
+
+  Future<void> _initProfile() async {
+    setState(() { isLoadingProfile = true; });
+    await _loadUserData();
+    await _fetchAvatars();
+    setState(() { isLoadingProfile = false; });
   }
 
   Future<void> _loadUserData() async {
@@ -71,69 +79,76 @@ class _ProfilePagesState extends State<ProfilePages> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text("Choose Your Fighter!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 16),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(_avatars.length, (index) {
-                    final avatar = _avatars[index];
-                    final path = '${Variable.baseUrl}/${avatar['image_path']}';
-                    return GestureDetector(
-                      onTap: () async {
-                        final pref = await SharedPreferences.getInstance();
-                        final token = pref.getString('token');
-                        final response = await http.post(
-                          Uri.parse('${Variable.baseUrl}/api/update-avatar'),
-                          headers: {
-                            'Authorization': 'Bearer $token',
-                            'Content-Type': 'application/json',
-                          },
-                          body: jsonEncode({'avatar_id': avatar['id']}),
-                        );
-                        if (response.statusCode == 200) {
-                          // Ambil user terbaru dari response
-                          final userData = jsonDecode(response.body)['user'];
-                          final newAvatarPath = userData['avatar']['image_path'];
-                          final newAvatarUrl = '${Variable.baseUrl}/$newAvatarPath';
-                          await pref.setString('avatar_url', newAvatarUrl);
-                          // Simpan juga data user terbaru jika perlu
-                          final authData = pref.getString('auth_data');
-                          if (authData != null) {
-                            final authJson = jsonDecode(authData);
-                            authJson['user']['avatar'] = userData['avatar'];
-                            await pref.setString('auth_data', jsonEncode(authJson));
-                          }
-                          setState(() {
-                            _avatarUrl = newAvatarUrl;
-                            _selectedAvatar = avatar['id'];
-                          });
-                        }
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 8),
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: avatar['id'] == _selectedAvatar ? Border.all(color: Color(0xFF00973A), width: 3) : null,
-                        ),
-                        child: CircleAvatar(
-                          radius: 32,
-                          backgroundImage: NetworkImage(path),
-                        ),
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("Choose Your Fighter!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 16),
+                  if (isAvatarLoading)
+                    const Center(child: CircularProgressIndicator()), // Tampilkan loading
+                  if (!isAvatarLoading)
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List.generate(_avatars.length, (index) {
+                          final avatar = _avatars[index];
+                          final path = '${Variable.baseUrl}/${avatar['image_path']}';
+                          return GestureDetector(
+                            onTap: () async {
+                              setModalState(() { isAvatarLoading = true; });
+                              final pref = await SharedPreferences.getInstance();
+                              final token = pref.getString('token');
+                              final response = await http.post(
+                                Uri.parse('${Variable.baseUrl}/api/update-avatar'),
+                                headers: {
+                                  'Authorization': 'Bearer $token',
+                                  'Content-Type': 'application/json',
+                                },
+                                body: jsonEncode({'avatar_id': avatar['id']}),
+                              );
+                              if (response.statusCode == 200) {
+                                final userData = jsonDecode(response.body)['user'];
+                                final newAvatarPath = userData['avatar']['image_path'];
+                                final newAvatarUrl = '${Variable.baseUrl}/$newAvatarPath';
+                                await pref.setString('avatar_url', newAvatarUrl);
+                                final authData = pref.getString('auth_data');
+                                if (authData != null) {
+                                  final authJson = jsonDecode(authData);
+                                  authJson['user']['avatar'] = userData['avatar'];
+                                  await pref.setString('auth_data', jsonEncode(authJson));
+                                }
+                                setState(() {
+                                  _avatarUrl = newAvatarUrl;
+                                  _selectedAvatar = avatar['id'];
+                                });
+                              }
+                              setModalState(() { isAvatarLoading = false; });
+                              Navigator.pop(context);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 8),
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: avatar['id'] == _selectedAvatar ? Border.all(color: Color(0xFF00973A), width: 3) : null,
+                              ),
+                              child: CircleAvatar(
+                                radius: 32,
+                                backgroundImage: NetworkImage(path),
+                              ),
+                            ),
+                          );
+                        }),
                       ),
-                    );
-                  }),
-                ),
+                    ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
@@ -141,6 +156,13 @@ class _ProfilePagesState extends State<ProfilePages> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoadingProfile) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     final userInitial = _username?.isNotEmpty == true ? _username![0].toUpperCase() : '';
 
     return Scaffold(
@@ -225,7 +247,9 @@ class _ProfilePagesState extends State<ProfilePages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => EditProfilePage()),
-                    );
+                    ).then((_) {
+                      _initProfile(); // Refresh data profile setelah kembali dari edit
+                    });
                   },
                 ),
                 const SizedBox(height: 24),
@@ -241,12 +265,15 @@ class _ProfilePagesState extends State<ProfilePages> {
                 ),
                 const SizedBox(height: 24),
                 _buildProfileItem(
-                  iconPath: 'assets/icons/icondonasi.png',
-                  label: 'Progres Penukaran',
-                  onTap: () {
+                  iconPath: 'assets/icons/icon_riwayat.png',
+                  label: 'Riwayat Penukaran',
+                  onTap: () async {
+                    final riwayatList = await ambilRiwayat();
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => ProgresDonasiPage()),
+                      MaterialPageRoute(
+                        builder: (_) => RiwayatPenukaranPage(riwayatList: riwayatList),
+                      ),
                     );
                   },
                 ),

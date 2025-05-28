@@ -72,7 +72,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     if (response.statusCode == 200) {
-      // ...sukses...
+      // Ambil data user terbaru dari response
+      final data = jsonDecode(response.body);
+      final userData = data['data'];
+      final prefs = await SharedPreferences.getInstance();
+      // Update auth_data di SharedPreferences
+      final authDataString = prefs.getString('auth_data');
+      if (authDataString != null) {
+        final authData = jsonDecode(authDataString);
+        authData['user'] = userData;
+        await prefs.setString('auth_data', jsonEncode(authData));
+      }
       return true;
     } else if (response.statusCode == 400) {
       final data = jsonDecode(response.body);

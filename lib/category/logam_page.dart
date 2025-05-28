@@ -219,9 +219,6 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
               style: TextStyle(fontWeight: FontWeight.bold)),
           Text(
               "• Logam campur plastik/karet\n• Logam kecil banget/berkarat\n• Kaleng cat bekas (mengandung bahan\n  kimia)"),
-          SizedBox(height: 10),
-          Text(
-              "⚠ Bersihkan dulu dan hindari campuran bahan lain."),
         ]),
         const SizedBox(height: 12),
         _buildCardArtikel(children: const [

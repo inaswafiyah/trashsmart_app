@@ -207,8 +207,8 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
             Text("Yang Tidak Bisa Didaur Ulang",
                 style: TextStyle(fontWeight: FontWeight.bold)),
             Text("• Kertas berminyak (nasi bungkus, pizza\n  box)\n• Tisu bekas\n• Kertas laminasi\n• Kertas karbon"),
-            SizedBox(height: 8),
-            Text("⚠ Jangan daur ulang kertas kotor atau lembab bisa merusak proses!"),
+           
+           
           ],
         )),
         const SizedBox(height: 12),

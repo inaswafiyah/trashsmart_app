@@ -4,9 +4,6 @@ import 'package:trashsmart/presentation/auth/bloc/bank/bank_bloc.dart';
 import 'package:trashsmart/presentation/auth/bloc/bank/bank_event.dart';
 import 'package:trashsmart/presentation/auth/bloc/bank/bank_state.dart';
 import 'package:trashsmart/data/datasource/bank_remote_datasource.dart';
-import 'package:trashsmart/widget/form_diri.dart';
-import 'donation_page.dart';
-import 'donation_page2.dart';
 import 'donation_page3.dart';
 
 class DonasiCard extends StatelessWidget {
