@@ -1,4 +1,3 @@
-// ... semua import tetap
 import 'package:flutter/material.dart';
 import 'package:trashsmart/category/category_page.dart';
 import 'package:trashsmart/category/jelantah_page.dart';
@@ -25,8 +24,8 @@ class HalamanUtama extends StatefulWidget {
 class _HalamanUtamaState extends State<HalamanUtama> {
   int totalDonasi = 0;
   bool isLoadingDonasi = true;
-  bool isLoadingUser = true; // Tambahkan ini
-  bool isLoadingVideos = true; // Tambahkan ini
+  bool isLoadingUser = true;
+  bool isLoadingVideos = true;
   String username = "User";
   String? avatarUrl;
   List<Map<String, dynamic>> sortedVideos = [];
@@ -40,16 +39,15 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   }
 
   Future<void> _loadUserData() async {
-    setState(() { isLoadingUser = true; }); // Mulai loading
+    setState(() { isLoadingUser = true; });
     try {
       final authData = await AuthLocalDatasource().getAuthData();
       final prefs = await SharedPreferences.getInstance();
       String? avatar;
       if (authData.user != null && authData.user!.username != null) {
-        // Ambil dari data user jika ada avatar
         if (authData.user!.avatar != null && authData.user!.avatar!.imagePath != null) {
           avatar = '${Variable.baseUrl}/${authData.user!.avatar!.imagePath}';
-          await prefs.setString('avatar_url', avatar); // update cache
+          await prefs.setString('avatar_url', avatar);
         } else {
           avatar = prefs.getString('avatar_url');
         }
@@ -57,7 +55,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         setState(() {
           username = authData.user!.username!;
           avatarUrl = avatar;
-          isLoadingUser = false; // Selesai loading
+          isLoadingUser = false;
         });
       } else {
         setState(() { isLoadingUser = false; });
@@ -69,7 +67,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   }
 
   Future<void> _loadVideos() async {
-    setState(() { isLoadingVideos = true; }); // Mulai loading
+    setState(() { isLoadingVideos = true; });
     final result = await AuthRemoteDatasource().getAllVideos();
     result.fold(
       (error) {
@@ -85,7 +83,7 @@ class _HalamanUtamaState extends State<HalamanUtama> {
         if (!mounted) return;
         setState(() {
           sortedVideos = videos;
-          isLoadingVideos = false; // Selesai loading
+          isLoadingVideos = false;
         });
       },
     );
@@ -128,15 +126,27 @@ class _HalamanUtamaState extends State<HalamanUtama> {
     {"icon": "assets/images/jelantah.png", "label": "Jelantah"},
   ];
 
+  // Tambahkan widget loading custom
+  Widget customLoadingWidget() {
+    return Center(
+      child: SizedBox(
+        width: 42,
+        height: 42,
+        child: CircularProgressIndicator(
+          strokeWidth: 7,
+          color: const Color(0xE500973A),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Jika masih loading user atau video, tampilkan loading
+    // Jika masih loading user atau video, tampilkan loading custom
     if (isLoadingUser || isLoadingVideos) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: customLoadingWidget(),
       );
     }
 
@@ -209,16 +219,18 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Icon(Icons.star, color: Color(0xFFFDC901), size: 62), // bintang besar
+                      const Icon(Icons.star, color: Color(0xFFFDC901), size: 62),
                       const SizedBox(width: 8),
-                      Text(
-                        isLoadingDonasi ? ".." : "$totalDonasi",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      isLoadingDonasi
+                          ? customLoadingWidget()
+                          : Text(
+                              "$totalDonasi",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                       const SizedBox(width: 8),
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -331,8 +343,8 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(8),
                             child: SizedBox(
-                              width: 120, // atau 140, sesuaikan dengan desain
-                              height: 68, // 16:9 dari 120 = 67.5, dibulatkan 68
+                              width: 120,
+                              height: 68,
                               child: Image.network(
                                 'https://img.youtube.com/vi/$id/0.jpg',
                                 fit: BoxFit.cover,

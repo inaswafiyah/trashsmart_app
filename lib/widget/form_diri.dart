@@ -45,13 +45,50 @@ class _FormPageState extends State<FormPage> {
 
   late final String? lockedCategory;
 
+  Map<String, int> kategoriHarga = {};
+
+  BuildContext? dialogContext; // Tambahkan ini
+
   @override
   void initState() {
     super.initState();
-    // Jika kategoriTerpilih kosong, berarti user bebas pilih kategori
     lockedCategory = widget.kategoriTerpilih.isNotEmpty ? widget.kategoriTerpilih : null;
     if (lockedCategory != null) {
       selectedCategories.add(lockedCategory!);
+    }
+    fetchKategoriHarga();
+  }
+
+  Future<void> fetchKategoriHarga() async {
+    final authData = await authLocalDatasource.getAuthData();
+    final token = authData.token ?? '';
+    print('TOKEN YANG DIKIRIM: $token');
+
+    final response = await http.get(
+      Uri.parse('${Variable.baseUrl}/api/api-categories'),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      try {
+        final data = jsonDecode(response.body);
+        print('DATA API: $data');
+        for (var item in data['data']) {
+          print('Kategori: ${item['name']} - Harga: ${item['price']}');
+          kategoriHarga[item['name']] = item['price'];
+        }
+        setState(() {});
+      } catch (e) {
+        print('Gagal decode JSON: $e');
+        print('Body: ${response.body}');
+      }
+    } else {
+      print('Status bukan 200: ${response.statusCode}');
+      print('Body: ${response.body}');
     }
   }
 
@@ -80,8 +117,6 @@ class _FormPageState extends State<FormPage> {
       return;
     }
 
-    late BuildContext dialogContext;
-
     try {
       final authData = await authLocalDatasource.getAuthData();
       final token = authData.token ?? '';
@@ -100,21 +135,14 @@ class _FormPageState extends State<FormPage> {
         "name": nameController.text.trim(),
         "phone": phoneController.text.trim(),
         "jumlah_sampah": jumlahSampahText,
-        "category": filteredCategories, // List<String>
+        "category": filteredCategories,
         "bank_sampah_nama": widget.bankSampahNama,
         "bank_sampah_alamat": widget.bankSampahAlamat,
       };
 
-      print(jsonEncode(body)); // cek output di debug console
+      print(jsonEncode(body));
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext ctx) {
-          dialogContext = ctx;
-          return const Center(child: CircularProgressIndicator());
-        },
-      );
+      showCustomLoading(context);
 
       final response = await http.post(
         url,
@@ -126,8 +154,9 @@ class _FormPageState extends State<FormPage> {
         body: jsonEncode(body),
       );
 
-      if (Navigator.of(dialogContext).canPop()) {
-        Navigator.of(dialogContext).pop();
+      // Tutup loading dialog dengan context dialog yang benar
+      if (dialogContext != null && Navigator.of(dialogContext!).canPop()) {
+        Navigator.of(dialogContext!).pop();
       }
 
       if (response.statusCode == 201) {
@@ -140,6 +169,8 @@ class _FormPageState extends State<FormPage> {
               jenisSampah: selectedCategories.join(', '),
               bankSampahNama: widget.bankSampahNama,
               bankSampahAlamat: widget.bankSampahAlamat,
+              kategoriHarga: kategoriHarga,
+              kategoriTerpilih: selectedCategories.toList(),
             ),
           ),
         );
@@ -163,13 +194,33 @@ class _FormPageState extends State<FormPage> {
         }
       }
     } catch (e) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
+      if (dialogContext != null && Navigator.of(dialogContext!).canPop()) {
+        Navigator.of(dialogContext!).pop();
       }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Terjadi error: $e')),
       );
     }
+  }
+
+  void showCustomLoading(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        dialogContext = ctx;
+        return Center(
+          child: SizedBox(
+            width: 42, // Lebih kecil
+            height: 42,
+            child: CircularProgressIndicator(
+              strokeWidth: 7, // Lebih tebal
+              color: Color(0xE500973A), // Hijau transparan sesuai permintaan
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

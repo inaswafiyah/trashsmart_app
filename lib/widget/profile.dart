@@ -22,7 +22,7 @@ class _ProfilePagesState extends State<ProfilePages> {
   int? _selectedAvatar;
   List<dynamic> _avatars = [];
   bool isAvatarLoading = false;
-  bool isLoadingProfile = true; // Tambahkan ini
+  bool isLoadingProfile = true;
 
   @override
   void initState() {
@@ -72,6 +72,20 @@ class _ProfilePagesState extends State<ProfilePages> {
     }
   }
 
+  // Widget loading custom
+  Widget customLoadingWidget() {
+    return const Center(
+      child: SizedBox(
+        width: 42,
+        height: 42,
+        child: CircularProgressIndicator(
+          strokeWidth: 7,
+          color: Color(0xE500973A),
+        ),
+      ),
+    );
+  }
+
   void _showAvatarPicker() {
     showModalBottomSheet(
       context: context,
@@ -89,7 +103,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                   const Text("Choose Your Fighter!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 16),
                   if (isAvatarLoading)
-                    const Center(child: CircularProgressIndicator()), // Tampilkan loading
+                    customLoadingWidget(), // Loading avatar
                   if (!isAvatarLoading)
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -157,9 +171,9 @@ class _ProfilePagesState extends State<ProfilePages> {
   @override
   Widget build(BuildContext context) {
     if (isLoadingProfile) {
-      return const Scaffold(
+      return Scaffold(
         backgroundColor: Colors.white,
-        body: Center(child: CircularProgressIndicator()),
+        body: customLoadingWidget(),
       );
     }
 
@@ -280,7 +294,7 @@ class _ProfilePagesState extends State<ProfilePages> {
               ],
             ),
           ),
-          const SizedBox(height: 110), // Tambahkan jarak agar button tidak terlalu ke bawah
+          const SizedBox(height: 110),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: OutlinedButton.icon(
@@ -307,7 +321,7 @@ class _ProfilePagesState extends State<ProfilePages> {
               label: const Text('Keluar', style: TextStyle(fontWeight: FontWeight.bold),),
             ),
           ),
-          const SizedBox(height: 20), // Tambahkan sedikit jarak bawah jika perlu
+          const SizedBox(height: 20),
         ],
       ),
     );

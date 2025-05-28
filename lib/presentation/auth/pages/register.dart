@@ -143,7 +143,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       'Daftar akunmu',
                       style: TextStyle(
                         fontSize: 16,
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
@@ -157,12 +157,34 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   const SizedBox(height: 35),
+
+                  // Nama Lengkap
+                  const Text(
+                    'Nama Lengkap',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black, // tetap hitam
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   _buildValidatedField(
                     controller: _usernameController,
                     hint: 'Nama Lengkap',
                     errorText: 'Nama lengkap wajib diisi',
                   ),
                   const SizedBox(height: 17),
+
+                  // No Telephone
+                  const Text(
+                    'Masukan No Telephone',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black, // tetap hitam
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   _buildValidatedField(
                     controller: _phoneController,
                     hint: 'Masukan No Telephone',
@@ -170,13 +192,35 @@ class _RegisterPageState extends State<RegisterPage> {
                     keyboardType: TextInputType.phone,
                   ),
                   const SizedBox(height: 17),
+
+                  // Email
+                  const Text(
+                    'Masukan Email',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black, // tetap hitam
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   _buildValidatedField(
                     controller: _emailController,
-                    hint: 'Email',
+                    hint: 'Masukan Email',
                     errorText: 'Email wajib diisi',
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 17),
+
+                  // Kata Sandi
+                  const Text(
+                    'Masukkan Kata Sandi',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black, // tetap hitam
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   _buildPasswordField(
                     controller: _passwordController,
                     hint: 'Masukkan Kata Sandi',
@@ -184,6 +228,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     errorText: 'Kata sandi wajib diisi',
                   ),
                   const SizedBox(height: 17),
+
+                  // Konfirmasi Kata Sandi
+                  const Text(
+                    'Konfirmasi Kata Sandi',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 15,
+                      color: Colors.black, // tetap hitam
+                    ),
+                  ),
+                  const SizedBox(height: 6),
                   _buildPasswordField(
                     controller: _confirmPasswordController,
                     hint: 'Konfirmasi Kata Sandi',
@@ -191,6 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     errorText: 'Konfirmasi kata sandi wajib diisi',
                   ),
                   const SizedBox(height: 25),
+
                   SizedBox(
                     width: double.infinity,
                     child: AnimatedContainer(
@@ -217,13 +273,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                   color: Colors.white,
                                 ),
                               )
-                            : Text(
+                            : const Text(
                                 'Daftar',
                                 style: TextStyle(
-                                  color: _allFieldsFilled
-                                      ? Colors.white
-                                      : Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xFF605D64), // warna #605D64
+                                  fontWeight: FontWeight.bold, // bold
                                 ),
                               ),
                       ),
@@ -275,43 +329,56 @@ class _RegisterPageState extends State<RegisterPage> {
       valueListenable: controller,
       builder: (context, value, child) {
         final bool isFilled = value.text.isNotEmpty;
-        return TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return errorText;
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(fontSize: 14),
-            filled: true,
-            fillColor: isFilled ? Colors.white : Colors.grey[300],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  isFilled
-                      ? const BorderSide(color: Colors.black, width: 1)
-                      : BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  isFilled
-                      ? const BorderSide(color: Colors.black, width: 1)
-                      : BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.black, width: 1),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+        return Focus(
+          child: Builder(
+            builder: (context) {
+              final isFocused = Focus.of(context).hasFocus;
+              return TextFormField(
+                controller: controller,
+                keyboardType: keyboardType,
+                style: const TextStyle(
+                  color: Colors.black, // warna text user jadi hitam
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return errorText;
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  hintText: hint,
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF605D64),
+                  ),
+                  filled: true,
+                  fillColor: isFocused || isFilled
+                      ? Colors.white
+                      : const Color(0xFFE5E5E5),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: isFocused || isFilled
+                        ? const BorderSide(color: Colors.black, width: 1)
+                        : BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: isFocused || isFilled
+                        ? const BorderSide(color: Colors.black, width: 1)
+                        : BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.black, width: 1),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              );
+            },
           ),
         );
       },
@@ -328,63 +395,76 @@ class _RegisterPageState extends State<RegisterPage> {
       valueListenable: controller,
       builder: (context, value, child) {
         final bool isFilled = value.text.isNotEmpty;
-        return TextFormField(
-          controller: controller,
-          obscureText: isConfirm ? _obscureConfirm : _obscurePassword,
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return errorText;
-            }
-            if (isConfirm && value != _passwordController.text) {
-              return 'Kata sandi tidak cocok';
-            }
-            return null;
-          },
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: const TextStyle(fontSize: 14),
-            filled: true,
-            fillColor: isFilled ? Colors.white : Colors.grey[300],
-            suffixIcon: IconButton(
-              icon: Icon(
-                (isConfirm ? _obscureConfirm : _obscurePassword)
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
-                color: Colors.black87,
-              ),
-              onPressed: () {
-                setState(() {
-                  if (isConfirm) {
-                    _obscureConfirm = !_obscureConfirm;
-                  } else {
-                    _obscurePassword = !_obscurePassword;
+        return Focus(
+          child: Builder(
+            builder: (context) {
+              final isFocused = Focus.of(context).hasFocus;
+              return TextFormField(
+                controller: controller,
+                obscureText: isConfirm ? _obscureConfirm : _obscurePassword,
+                style: const TextStyle(
+                  color: Colors.black, // warna text user jadi hitam
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return errorText;
                   }
-                });
-              },
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  isFilled
-                      ? const BorderSide(color: Colors.black, width: 1)
-                      : BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  isFilled
-                      ? const BorderSide(color: Colors.black, width: 1)
-                      : BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.black, width: 1),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+                  if (isConfirm && value != _passwordController.text) {
+                    return 'Kata sandi tidak cocok';
+                  }
+                  return null;
+                },
+                decoration: InputDecoration(
+                  hintText: hint,
+                  hintStyle: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF605D64),
+                  ),
+                  filled: true,
+                  fillColor: isFocused || isFilled
+                      ? Colors.white
+                      : const Color(0xFFE5E5E5),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      (isConfirm ? _obscureConfirm : _obscurePassword)
+                          ? Icons.visibility_outlined
+                          : Icons.visibility_off_outlined,
+                      color: Colors.black87,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        if (isConfirm) {
+                          _obscureConfirm = !_obscureConfirm;
+                        } else {
+                          _obscurePassword = !_obscurePassword;
+                        }
+                      });
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: isFocused || isFilled
+                        ? const BorderSide(color: Colors.black, width: 1)
+                        : BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: isFocused || isFilled
+                        ? const BorderSide(color: Colors.black, width: 1)
+                        : BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.black, width: 1),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 14,
+                  ),
+                  errorStyle: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
+              );
+            },
           ),
         );
       },

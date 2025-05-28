@@ -9,6 +9,20 @@ import 'donation_page3.dart';
 class DonasiCard extends StatelessWidget {
   const DonasiCard({Key? key}) : super(key: key);
 
+  // Widget loading custom sesuai permintaan
+  Widget customLoadingWidget() {
+    return Center(
+      child: SizedBox(
+        width: 42,
+        height: 42,
+        child: CircularProgressIndicator(
+          strokeWidth: 7,
+          color: const Color(0xE500973A),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -26,7 +40,7 @@ class DonasiCard extends StatelessWidget {
         body: BlocBuilder<BankBloc, BankState>(
           builder: (context, state) {
             if (state.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return customLoadingWidget();
             }
 
             if (state.errorMessage != null) {

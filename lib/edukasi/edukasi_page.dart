@@ -6,6 +6,20 @@ import 'package:trashsmart/edukasi/video_player.dart';
 class HalamanEdukasiPage extends StatelessWidget {
   const HalamanEdukasiPage({super.key});
 
+  // Widget loading custom
+  Widget customLoadingWidget() {
+    return const Center(
+      child: SizedBox(
+        width: 42,
+        height: 42,
+        child: CircularProgressIndicator(
+          strokeWidth: 7,
+          color: Color(0xE500973A),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +36,7 @@ class HalamanEdukasiPage extends StatelessWidget {
         future: AuthRemoteDatasource().getAllVideos(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return customLoadingWidget();
           }
           if (snapshot.hasError || snapshot.data?.isLeft() == true) {
             return const Center(child: Text('Gagal mengambil video'));
@@ -100,7 +114,9 @@ class HalamanEdukasiPage extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   alignment: Alignment.center,
                                   loadingBuilder: (context, child, progress) =>
-                                      progress == null ? child : const Center(child: CircularProgressIndicator()),
+                                      progress == null
+                                          ? child
+                                          : customLoadingWidget(),
                                   errorBuilder: (context, error, stackTrace) =>
                                       Container(color: Colors.grey[300]),
                                 ),

@@ -238,17 +238,49 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 1),
                   const Text(
                     "Masuk akunmu",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 17,
+                      color: Colors.black, // warna judul utama
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Image.asset('assets/images/logo.png', height: 60),
                   const SizedBox(height: 80),
+
+                  // Email
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Masukan Email',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: Colors.black, // warna judul field
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6),
                   _buildTextField(
                     controller: emailController,
                     hintText: 'Masukan Email',
                     obscureText: false,
                   ),
                   const SizedBox(height: 16),
+
+                  // Password
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Masukkan Kata Sandi',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
+                        color: Colors.black, // warna judul field
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 6),
                   _buildTextField(
                     controller: passwordController,
                     hintText: 'Masukkan Kata Sandi',
@@ -271,34 +303,31 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       onPressed: isFilled && !isLoading ? _login : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            isFilled
-                                ? const Color(0xFF00973A)
-                                : Colors.grey[300],
+                        backgroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         disabledBackgroundColor: Colors.grey[300],
+                        elevation: 0,
                       ),
-                      child:
-                          isLoading
-                              ? const CircularProgressIndicator(
-                                color: Colors.white,
-                              )
-                              : const Text(
-                                'Masuk',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(
+                              color: Color(0xFF605D64),
+                            )
+                          : const Text(
+                              'Masuk',
+                              style: TextStyle(
+                                color: Color(0xFF605D64), // warna text Masuk
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold, // bold
                               ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 20),
 
-                  // Google Sign In Button (added here)
+                  // Google Sign In Button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
@@ -307,14 +336,22 @@ class _LoginPageState extends State<LoginPage> {
                         'assets/icons/google_logo.jpg',
                         height: 24,
                       ),
-                      label: const Text('Sign in with Google'),
+                      label: const Text(
+                        'Masuk dengan Google',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: Colors.black,
-                        minimumSize: Size(double.infinity, 50),
+                        minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.black, width: 1), // border hitam
                         ),
+                        elevation: 0,
                       ),
                     ),
                   ),
@@ -325,7 +362,9 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       const Text(
                         'Belum memiliki akun? ',
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                          color: Color(0xFF605D64), // warna text
+                        ),
                       ),
                       GestureDetector(
                         onTap: () {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:trashsmart/widget/bottom.dart';
 import 'package:trashsmart/profile/riwayat_penukaran.dart';
 import 'package:trashsmart/profile/riwayat_penukaran_model.dart';
@@ -10,6 +11,8 @@ class ResiPenyerahanPage extends StatelessWidget {
   final String jenisSampah;
   final String bankSampahNama;
   final String bankSampahAlamat;
+  final Map<String, int> kategoriHarga;
+  final List<String> kategoriTerpilih;
 
   const ResiPenyerahanPage({
     super.key,
@@ -19,11 +22,14 @@ class ResiPenyerahanPage extends StatelessWidget {
     required this.jenisSampah,
     required this.bankSampahNama,
     required this.bankSampahAlamat,
+    required this.kategoriHarga,
+    required this.kategoriTerpilih,
   });
 
   @override
   Widget build(BuildContext context) {
     final Color primaryColor = const Color(0xFF00973A);
+    final NumberFormat currencyFormat = NumberFormat('#,###', 'id_ID');
 
     return Scaffold(
       appBar: AppBar(
@@ -142,7 +148,19 @@ class ResiPenyerahanPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        buildInfoRow(jenisSampah, 'Rp. 2.000/kg'),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...kategoriTerpilih.map(
+                              (kategori) => buildInfoRow(
+                                kategori,
+                                kategoriHarga[kategori] != null
+                                    ? 'Rp. ${currencyFormat.format(kategoriHarga[kategori])}/kg'
+                                    : '-',
+                              ),
+                            ),
+                          ],
+                        ),
                         const SizedBox(height: 16),
                         const Text(
                           'Catatan:',
