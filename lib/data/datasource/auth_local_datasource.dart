@@ -9,9 +9,8 @@ class AuthLocalDatasource {
   Future<void> saveAuthData(AuthResponseModel data) async {
     final pref = await SharedPreferences.getInstance();
     await pref.setString('auth_data', data.toJson());
-    await pref.setString('token', data.token ?? ''); // Menyimpan token secara eksplisit jika diperlukan
+    await pref.setString('token', data.token ?? '');
 
-    // Tambahan untuk menyimpan avatar
     if (data.user?.avatar?.imagePath != null) {
       await pref.setString(keyAvatarUrl, data.user!.avatar!.imagePath!);
     }
@@ -31,7 +30,7 @@ class AuthLocalDatasource {
     final pref = await SharedPreferences.getInstance();
     final data = pref.getString('auth_data');
     if (data != null) {
-      return AuthResponseModel.fromJson(data); // Mengambil dan mengkonversi data JSON
+      return AuthResponseModel.fromJson(data);
     } else {
       throw Exception('Data tidak ada');
     }
@@ -42,7 +41,6 @@ class AuthLocalDatasource {
     return pref.containsKey('auth_data');
   }
 
-  // Tambahan untuk ambil avatar
   Future<String?> getAvatarUrl() async {
     final pref = await SharedPreferences.getInstance();
     return pref.getString(keyAvatarUrl);

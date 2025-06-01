@@ -14,9 +14,11 @@ class EditPasswordPage extends StatefulWidget {
 }
 
 class _EditPasswordPageState extends State<EditPasswordPage> {
-  final TextEditingController _currentPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _obscureCurrentPassword = true;
   bool _obscureNewPassword = true;
@@ -73,15 +75,17 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     final confirmPass = _confirmPasswordController.text.trim();
 
     if (!_allFieldsFilled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Semua kolom harus diisi')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Semua kolom harus diisi')));
       return;
     }
 
     if (newPass != confirmPass) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password baru dan konfirmasi tidak sama')),
+        const SnackBar(
+          content: Text('Password baru dan konfirmasi tidak sama'),
+        ),
       );
       return;
     }
@@ -90,7 +94,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     final authDataString = prefs.getString('auth_data');
     if (authDataString == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User tidak ditemukan, silakan login ulang')),
+        const SnackBar(
+          content: Text('User tidak ditemukan, silakan login ulang'),
+        ),
       );
       return;
     }
@@ -98,9 +104,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     final authData = AuthResponseModel.fromJson(authDataString);
     final user = authData.user;
     if (user == null || user.id == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User tidak valid')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('User tidak valid')));
       return;
     }
 
@@ -132,18 +138,21 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
         _safePop();
       }
     } else {
-      String errorMsg = 'Gagal mengubah password. Periksa password lama dan coba lagi.';
+      String errorMsg =
+          'Gagal mengubah password. Periksa password lama dan coba lagi.';
       try {
         final resBody = jsonDecode(response.body);
         if (resBody['message'] != null) {
           errorMsg = resBody['message'];
         } else if (resBody['errors'] != null) {
-          errorMsg = resBody['errors'].values.map((e) => e.join(', ')).join('\n');
+          errorMsg = resBody['errors'].values
+              .map((e) => e.join(', '))
+              .join('\n');
         }
       } catch (_) {}
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMsg)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMsg)));
     }
   }
 
@@ -162,7 +171,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
           contentPadding: const EdgeInsets.all(20),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -187,11 +198,17 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.green),
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                       child: const Text(
                         'Batal',
-                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -205,11 +222,17 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF00973A),
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                       child: const Text(
                         'Keluar',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                   ),
@@ -222,11 +245,17 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
     );
   }
 
-  Widget _buildPasswordField(TextEditingController controller, String hintText, bool obscureText, VoidCallback toggleVisibility) {
+  Widget _buildPasswordField(
+    TextEditingController controller,
+    String hintText,
+    bool obscureText,
+    VoidCallback toggleVisibility,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: controller.text.isEmpty ? Colors.grey.shade300 : Colors.white,
-        border: controller.text.isEmpty ? null : Border.all(color: Colors.black54),
+        border:
+            controller.text.isEmpty ? null : Border.all(color: Colors.black54),
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextField(
@@ -235,10 +264,16 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey.shade700),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 12,
+          ),
           border: InputBorder.none,
           suffixIcon: IconButton(
-            icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.grey),
+            icon: Icon(
+              obscureText ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
             onPressed: toggleVisibility,
           ),
         ),
@@ -261,7 +296,11 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
         ),
         title: const Text(
           'Ubah Kata Sandi',
-          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),
@@ -277,44 +316,70 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                 child: CircleAvatar(
                   radius: 40,
                   backgroundColor: Colors.grey.shade300,
-                  backgroundImage: (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                      ? NetworkImage(_avatarUrl!)
-                      : null,
-                  child: (_avatarUrl == null || _avatarUrl!.isEmpty)
-                      ? Text(
-                          _userInitial,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : null,
+                  backgroundImage:
+                      (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                          ? NetworkImage(_avatarUrl!)
+                          : null,
+                  child:
+                      (_avatarUrl == null || _avatarUrl!.isEmpty)
+                          ? Text(
+                            _userInitial,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                          : null,
                 ),
               ),
-              const Text('Kata Sandi Saat Ini', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Kata Sandi Saat Ini',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
-              _buildPasswordField(_currentPasswordController, 'Kata Sandi Saat Ini', _obscureCurrentPassword, () {
-                setState(() {
-                  _obscureCurrentPassword = !_obscureCurrentPassword;
-                });
-              }),
+              _buildPasswordField(
+                _currentPasswordController,
+                'Kata Sandi Saat Ini',
+                _obscureCurrentPassword,
+                () {
+                  setState(() {
+                    _obscureCurrentPassword = !_obscureCurrentPassword;
+                  });
+                },
+              ),
               const SizedBox(height: 25),
-              const Text('Kata Sandi Baru', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Kata Sandi Baru',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
-              _buildPasswordField(_newPasswordController, 'Kata Sandi Baru', _obscureNewPassword, () {
-                setState(() {
-                  _obscureNewPassword = !_obscureNewPassword;
-                });
-              }),
+              _buildPasswordField(
+                _newPasswordController,
+                'Kata Sandi Baru',
+                _obscureNewPassword,
+                () {
+                  setState(() {
+                    _obscureNewPassword = !_obscureNewPassword;
+                  });
+                },
+              ),
               const SizedBox(height: 25),
-              const Text('Tulis Ulang Kata Sandi Baru', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Tulis Ulang Kata Sandi Baru',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               const SizedBox(height: 8),
-              _buildPasswordField(_confirmPasswordController, 'Tulis Ulang Kata Sandi Baru', _obscureConfirmPassword, () {
-                setState(() {
-                  _obscureConfirmPassword = !_obscureConfirmPassword;
-                });
-              }),
+              _buildPasswordField(
+                _confirmPasswordController,
+                'Tulis Ulang Kata Sandi Baru',
+                _obscureConfirmPassword,
+                () {
+                  setState(() {
+                    _obscureConfirmPassword = !_obscureConfirmPassword;
+                  });
+                },
+              ),
               const SizedBox(height: 120),
               Row(
                 children: [
@@ -327,7 +392,9 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                         elevation: 0,
                         side: const BorderSide(color: Color(0xFF207A3E)),
                         padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
                       child: const Text('Batal'),
                     ),
@@ -337,12 +404,20 @@ class _EditPasswordPageState extends State<EditPasswordPage> {
                     child: ElevatedButton(
                       onPressed: _allFieldsFilled ? _handleSave : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _allFieldsFilled ? const Color(0xFF00AB41) : Colors.grey,
+                        backgroundColor:
+                            _allFieldsFilled
+                                ? const Color(0xFF00AB41)
+                                : Colors.grey,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                      child: const Text('Simpan', style: TextStyle(fontWeight: FontWeight.bold)),
+                      child: const Text(
+                        'Simpan',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ],

@@ -22,7 +22,10 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
       create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Informasi Kategori"),
+          title: const Text(
+            "Informasi Kategori",
+            style: TextStyle(fontSize: 18),
+          ),
           centerTitle: true,
           backgroundColor: const Color(0xFF00973A),
           foregroundColor: Colors.white,
@@ -43,7 +46,7 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                               const Text(
                                 "Kaca",
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -71,7 +74,7 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                                   child: Text(
                                     "Pilih Bank Sampah Kami",
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -80,26 +83,42 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                                 BlocBuilder<BankBloc, BankState>(
                                   builder: (context, state) {
                                     if (state.isLoading) {
-                                      return const Center(child: CircularProgressIndicator());
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
                                     }
                                     if (state.errorMessage != null) {
-                                      return Center(child: Text('Error: ${state.errorMessage}'));
+                                      return Center(
+                                        child: Text(
+                                          'Error: ${state.errorMessage}',
+                                        ),
+                                      );
                                     }
                                     final bankList = state.bankList;
                                     if (bankList.isEmpty) {
-                                      return const Center(child: Text('Belum ada data bank sampah.'));
+                                      return const Center(
+                                        child: Text(
+                                          'Belum ada data bank sampah.',
+                                        ),
+                                      );
                                     }
                                     return Column(
                                       children: [
-                                        ...List.generate(bankList.length, (index) {
+                                        ...List.generate(bankList.length, (
+                                          index,
+                                        ) {
                                           final bank = bankList[index];
                                           return Column(
                                             children: [
                                               _buildBankSampahItem(
                                                 index: index,
-                                                nama: bank.bankSampahNama ?? '-',
-                                                alamat: bank.bankSampahAlamat ?? '-',
-                                                imagePath: "assets/images/map.png",
+                                                nama:
+                                                    bank.bankSampahNama ?? '-',
+                                                alamat:
+                                                    bank.bankSampahAlamat ??
+                                                    '-',
+                                                imagePath:
+                                                    "assets/images/map.png",
                                               ),
                                               const SizedBox(height: 12),
                                             ],
@@ -108,42 +127,72 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                                         SizedBox(
                                           width: double.infinity,
                                           child: ElevatedButton(
-                                            onPressed: selectedBankIndex != null
-                                                ? () {
-                                                    final selectedBank = bankList[selectedBankIndex!];
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => FormPage(
-                                                          kategoriTerpilih: 'Kaca',
-                                                          bankSampahNama: selectedBank.bankSampahNama ?? '-',
-                                                          bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                            onPressed:
+                                                selectedBankIndex != null
+                                                    ? () {
+                                                      final selectedBank =
+                                                          bankList[selectedBankIndex!];
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder:
+                                                              (
+                                                                context,
+                                                              ) => FormPage(
+                                                                kategoriTerpilih:
+                                                                    'Kaca',
+                                                                bankSampahNama:
+                                                                    selectedBank
+                                                                        .bankSampahNama ??
+                                                                    '-',
+                                                                bankSampahAlamat:
+                                                                    selectedBank
+                                                                        .bankSampahAlamat ??
+                                                                    '-',
+                                                              ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  }
-                                                : null,
+                                                      );
+                                                    }
+                                                    : null,
                                             style: ButtonStyle(
-                                              backgroundColor: MaterialStateProperty.all(
-                                                const Color(0xFF00973A),
-                                              ),
-                                              foregroundColor: MaterialStateProperty.all(
-                                                Colors.white,
-                                              ),
-                                              padding: MaterialStateProperty.all(
-                                                const EdgeInsets.symmetric(vertical: 16),
-                                              ),
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                    const Color(0xFF00973A),
+                                                  ),
+                                              foregroundColor:
+                                                  MaterialStateProperty.all(
+                                                    Colors.white,
+                                                  ),
+                                              padding:
+                                                  MaterialStateProperty.all(
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                    ),
+                                                  ),
                                               shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(8),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
                                                 ),
                                               ),
-                                              elevation: MaterialStateProperty.resolveWith<double>(
-                                                (states) => states.contains(MaterialState.disabled) ? 0 : 4,
-                                              ),
-                                              shadowColor: MaterialStateProperty.all(
-                                                Colors.grey.withOpacity(0.4),
-                                              ),
+                                              elevation:
+                                                  MaterialStateProperty.resolveWith<
+                                                    double
+                                                  >(
+                                                    (states) =>
+                                                        states.contains(
+                                                              MaterialState
+                                                                  .disabled,
+                                                            )
+                                                            ? 0
+                                                            : 4,
+                                                  ),
+                                              shadowColor:
+                                                  MaterialStateProperty.all(
+                                                    Colors.grey.withOpacity(
+                                                      0.4,
+                                                    ),
+                                                  ),
                                             ),
                                             child: const Text("Tukar Sekarang"),
                                           ),
@@ -195,7 +244,7 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                 padding: EdgeInsets.all(16),
                 child: Text(
                   "♻️ Sampah Kaca: Rapuh Tapi Bernilai Tinggi Jika Didaur Ulang",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ),
             ],
@@ -204,23 +253,38 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
         const SizedBox(height: 12),
         _buildCardArtikel(
           children: const [
-            Text("Daur Ulang Sampah Kaca:"),
+            Text("Daur Ulang Sampah Kaca:", style: TextStyle(fontSize: 13)),
             SizedBox(height: 8),
             Text(
               "Yang Bisa Didaur Ulang:",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
-            Text("• Botol kaca (sirup, minuman, kecap)"),
-            Text("• Toples kaca (kopi, madu, selai)"),
-            Text("• Pecahan kaca bening/berwarna"),
+            Text(
+              "• Botol kaca (sirup, minuman, kecap)",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Toples kaca (kopi, madu, selai)",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Pecahan kaca bening/berwarna",
+              style: TextStyle(fontSize: 13),
+            ),
             SizedBox(height: 8),
             Text(
               "Yang Sulit Didaur Ulang:",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
-            Text("• Cermin, kaca oven/microwave"),
-            Text("• Bohlam & lampu neon"),
-            Text("• Kaca bercampur logam/plastik"),
+            Text(
+              "• Cermin, kaca oven/microwave",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text("• Bohlam & lampu neon", style: TextStyle(fontSize: 13)),
+            Text(
+              "• Kaca bercampur logam/plastik",
+              style: TextStyle(fontSize: 13),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -228,13 +292,19 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
           children: const [
             Text(
               "Cara Mengelola:",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
             SizedBox(height: 8),
-            Text("• Cuci bersih"),
-            Text("• Bungkus pecahan dengan\n  kertas/koran"),
-            Text("• Simpan kering dan aman"),
-            Text("• Drop-off ke bank sampah kaca"),
+            Text("• Cuci bersih", style: TextStyle(fontSize: 13)),
+            Text(
+              "• Bungkus pecahan dengan\n  kertas/koran",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text("• Simpan kering dan aman", style: TextStyle(fontSize: 13)),
+            Text(
+              "• Drop-off ke bank sampah kaca",
+              style: TextStyle(fontSize: 13),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -242,12 +312,12 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
           children: const [
             Text(
               "Donasikan botol dan pecahan kaca, dapatkan Rp1.000/kg dan selamatkan lingkungan!\"",
-              style: TextStyle(fontWeight: FontWeight.normal),
+              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13),
             ),
             SizedBox(height: 8),
             Text(
               "Yuk, Tukarkan Sekarang!",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
           ],
         ),
@@ -307,10 +377,11 @@ class _KacaDetailPageState extends State<KacaDetailPage> {
                     child: Image.asset(
                       imagePath,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.error, color: Colors.red),
-                      ),
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.error, color: Colors.red),
+                          ),
                     ),
                   ),
                   Expanded(

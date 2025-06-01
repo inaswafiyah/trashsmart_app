@@ -1,9 +1,8 @@
-// reusable_category_detail_page.dart
 import 'package:flutter/material.dart';
 
 class ReusableCategoryDetailPage extends StatelessWidget {
   final String title;
-  final String imagePath; 
+  final String imagePath;
   final List<Widget> content;
 
   const ReusableCategoryDetailPage({
@@ -32,7 +31,10 @@ class ReusableCategoryDetailPage extends StatelessWidget {
                 Center(
                   child: Text(
                     title,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),

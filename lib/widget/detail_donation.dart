@@ -25,10 +25,13 @@ class _DonasiPage3State extends State<DonasiPage3> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white,),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Bank Sampah ', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'Bank Sampah ',
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: const Color(0xFF009B3E),
         elevation: 0,
@@ -42,7 +45,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
               height: 200,
               child: FlutterMap(
                 options: MapOptions(
-                  initialCenter: LatLng(-6.200000, 106.816666), // gunakan data dinamis
+                  initialCenter: LatLng(-6.200000, 106.816666),
                   initialZoom: 17.0,
                 ),
                 children: [
@@ -54,7 +57,10 @@ class _DonasiPage3State extends State<DonasiPage3> {
                   MarkerLayer(
                     markers: [
                       Marker(
-                        point: LatLng(-6.200000, 106.816666), // gunakan data dinamis
+                        point: LatLng(
+                          -6.200000,
+                          106.816666,
+                        ), // gunakan data dinamis
                         width: 40,
                         height: 40,
                         child: const Icon(
@@ -76,7 +82,9 @@ class _DonasiPage3State extends State<DonasiPage3> {
                   Text(
                     widget.bankSampahNama,
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -85,7 +93,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
                   ),
                   const SizedBox(height: 10),
                   SizedBox(
-                    width: 130, // Lebar sesuai gambar, bisa diubah 120-140 sesuai selera
+                    width: 130,
                     child: ElevatedButton(
                       onPressed: () async {
                         final url = widget.mapsUrl;
@@ -97,8 +105,8 @@ class _DonasiPage3State extends State<DonasiPage3> {
                         backgroundColor: const Color(0xFFFDC901),
                         foregroundColor: Colors.black,
                         elevation: 2,
-                        minimumSize: const Size(0, 40), // tinggi 40, lebar mengikuti SizedBox
-                        padding: EdgeInsets.zero, // padding nol agar tidak melebar
+                        minimumSize: const Size(0, 40),
+                        padding: EdgeInsets.zero,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -138,7 +146,7 @@ class _DonasiPage3State extends State<DonasiPage3> {
                   _buildSampahDisplay('logam', 'Logam'),
                   _buildSampahDisplay('organik', 'Organik'),
                   _buildSampahDisplay('tekstil', 'Tekstil'),
-                  _buildSampahDisplay( 'kaca', 'Kaca'),
+                  _buildSampahDisplay('kaca', 'Kaca'),
                   _buildSampahDisplay('jelantah', 'Jelantah'),
                 ],
               ),
@@ -155,11 +163,12 @@ class _DonasiPage3State extends State<DonasiPage3> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => FormPage(
-                          kategoriTerpilih: '',
-                          bankSampahNama: widget.bankSampahNama,
-                          bankSampahAlamat: widget.bankSampahAlamat,
-                        ),
+                        builder:
+                            (context) => FormPage(
+                              kategoriTerpilih: '',
+                              bankSampahNama: widget.bankSampahNama,
+                              bankSampahAlamat: widget.bankSampahAlamat,
+                            ),
                       ),
                     );
                   },
@@ -183,7 +192,6 @@ class _DonasiPage3State extends State<DonasiPage3> {
     );
   }
 
-  // Fungsi untuk menampilkan jenis sampah
   Widget _buildSampahDisplay(String iconName, String label) {
     return Padding(
       padding: const EdgeInsets.only(right: 16.0),

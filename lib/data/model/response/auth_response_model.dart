@@ -6,10 +6,7 @@ class AuthResponseModel {
   final User? user;
   final String? token;
 
-  AuthResponseModel({
-    this.user,
-    this.token,
-  });
+  AuthResponseModel({this.user, this.token});
 
   factory AuthResponseModel.fromJson(String str) =>
       AuthResponseModel.fromMap(json.decode(str));
@@ -22,11 +19,9 @@ class AuthResponseModel {
         token: json["token"],
       );
 
-  Map<String, dynamic> toMap() => {
-        "user": user?.toMap(),
-        "token": token,
-      };
+  Map<String, dynamic> toMap() => {"user": user?.toMap(), "token": token};
 }
+
 class User {
   int? id;
   String? username;
@@ -52,10 +47,8 @@ class User {
     this.updatedAt,
   });
 
-  // Getter for username with fallback
   String get safeUsername => username ?? 'User';
 
-  // Setter methods
   void setUsername(String newUsername) {
     username = newUsername;
   }
@@ -68,7 +61,6 @@ class User {
     email = newEmail;
   }
 
-  // Tambahan: copyWith method
   User copyWith({
     int? id,
     String? username,
@@ -96,28 +88,28 @@ class User {
   }
 
   factory User.fromMap(Map<String, dynamic> json) => User(
-        id: json["id"],
-        username: json["username"],
-        email: json["email"],
-        avatarId: json["avatar_id"],
-        avatar: json["avatar"] == null ? null : Avatar.fromMap(json["avatar"]),
-        emailVerifiedAt: json["email_verified_at"],
-        phone: json["phone"],
-        role: json["role"],
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-      );
+    id: json["id"],
+    username: json["username"],
+    email: json["email"],
+    avatarId: json["avatar_id"],
+    avatar: json["avatar"] == null ? null : Avatar.fromMap(json["avatar"]),
+    emailVerifiedAt: json["email_verified_at"],
+    phone: json["phone"],
+    role: json["role"],
+    createdAt: json["created_at"],
+    updatedAt: json["updated_at"],
+  );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "username": username,
-        "email": email,
-        "avatar_id": avatarId,
-        "avatar": avatar?.toMap(),
-        "email_verified_at": emailVerifiedAt,
-        "phone": phone,
-        "role": role,
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-      };
+    "id": id,
+    "username": username,
+    "email": email,
+    "avatar_id": avatarId,
+    "avatar": avatar?.toMap(),
+    "email_verified_at": emailVerifiedAt,
+    "phone": phone,
+    "role": role,
+    "created_at": createdAt,
+    "updated_at": updatedAt,
+  };
 }

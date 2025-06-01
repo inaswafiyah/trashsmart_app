@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trashsmart/presentation/auth/pages/login.dart'; // Ganti dengan path halaman login
+import 'package:trashsmart/presentation/auth/pages/login.dart';
 
 class PopupLogout extends StatelessWidget {
   const PopupLogout({super.key});
@@ -8,7 +8,7 @@ class PopupLogout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF7A7272), // Warna abu-abu latar
+      backgroundColor: const Color(0xFF7A7272),
       body: Center(
         child: Container(
           width: 320,
@@ -21,7 +21,7 @@ class PopupLogout extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'assets/icons/iconperingatan.png', // Ganti dengan ikon yang sesuai
+                'assets/icons/iconperingatan.png',
                 color: Colors.red,
                 width: 80,
                 height: 80,
@@ -29,10 +29,7 @@ class PopupLogout extends StatelessWidget {
               const SizedBox(height: 16),
               const Text(
                 'Keluar dari Trashmart',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               const SizedBox(height: 8),
               const Text(
@@ -47,13 +44,13 @@ class PopupLogout extends StatelessWidget {
                     child: OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color(0xFF00973A),
-                        side: const BorderSide(color:  Color(0xFF00973A)),
+                        side: const BorderSide(color: Color(0xFF00973A)),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         minimumSize: const Size.fromHeight(48),
                       ),
-                      onPressed: () => Navigator.pop(context), // Kembali
+                      onPressed: () => Navigator.pop(context),
                       child: const Text('Batal'),
                     ),
                   ),
@@ -75,7 +72,7 @@ class PopupLogout extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -85,8 +82,8 @@ class PopupLogout extends StatelessWidget {
 
   Future<void> logout(BuildContext context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_data');  // Hapus data user lain jika perlu
-    await prefs.remove('token');      // Hapus token login jika ada
+    await prefs.remove('auth_data');
+    await prefs.remove('token');
     await prefs.remove('avatar_url');
 
     Navigator.pop(context);

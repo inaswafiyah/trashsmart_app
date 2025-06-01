@@ -4,7 +4,7 @@ import 'package:trashsmart/presentation/auth/bloc/bank/bank_bloc.dart';
 import 'package:trashsmart/presentation/auth/bloc/bank/bank_event.dart';
 import 'package:trashsmart/presentation/auth/bloc/bank/bank_state.dart';
 import 'package:trashsmart/data/datasource/bank_remote_datasource.dart';
-import 'donation_page3.dart';
+import 'detail_donation.dart';
 
 class DonasiCard extends StatelessWidget {
   const DonasiCard({Key? key}) : super(key: key);

@@ -56,7 +56,6 @@ class _ProgresDonasiPageState extends State<ProgresDonasiPage> {
       ),
       body: Column(
         children: [
-          // CARD HIJAU ATAS
           Container(
             margin: const EdgeInsets.all(16),
             padding: const EdgeInsets.all(16),
@@ -114,14 +113,12 @@ class _ProgresDonasiPageState extends State<ProgresDonasiPage> {
             ),
           ),
 
-          // BAGIAN ABU DI ANTARA CARD DAN ISI
           Container(
             width: double.infinity,
             height: 16,
             color: const Color(0xFFF5F5F5),
           ),
 
-          // IKON DONASI & TEKS
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Container(
@@ -160,10 +157,7 @@ class _ProgresDonasiPageState extends State<ProgresDonasiPage> {
 
           const SizedBox(height: 16),
 
-          // SISA HALAMAN KOSONG PUTIH
-          const Expanded(
-            child: SizedBox(),
-          ),
+          const Expanded(child: SizedBox()),
         ],
       ),
     );

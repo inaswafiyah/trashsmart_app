@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trashsmart/core/constants/variable.dart';
 import 'package:trashsmart/data/model/response/auth_response_model.dart';
 import 'package:trashsmart/message/popup_edit_success.dart';
+import 'package:trashsmart/message/popup_edit_alert.dart';
 
 class EditProfilePage extends StatefulWidget {
   @override
@@ -72,11 +73,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
 
     if (response.statusCode == 200) {
-      // Ambil data user terbaru dari response
       final data = jsonDecode(response.body);
       final userData = data['data'];
       final prefs = await SharedPreferences.getInstance();
-      // Update auth_data di SharedPreferences
+
       final authDataString = prefs.getString('auth_data');
       if (authDataString != null) {
         final authData = jsonDecode(authDataString);
@@ -92,12 +92,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
         errorMsg += errors['email'][0];
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMsg.isNotEmpty ? errorMsg : 'Gagal update profile')),
+        SnackBar(
+          content: Text(
+            errorMsg.isNotEmpty ? errorMsg : 'Gagal update profile',
+          ),
+        ),
       );
       return false;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update profile. Please try again.')),
+        const SnackBar(
+          content: Text('Failed to update profile. Please try again.'),
+        ),
       );
       return false;
     }
@@ -129,7 +135,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to update profile. Please try again.')),
+        const SnackBar(
+          content: Text('Failed to update profile. Please try again.'),
+        ),
       );
     }
   }
@@ -141,10 +149,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       appBar: AppBar(
         title: Text('Edit Profile'),
         centerTitle: true,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: _safePop,
-        ),
+        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: _safePop),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -161,21 +166,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   child: CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.grey.shade300,
-                    backgroundImage: (_avatarUrl != null && _avatarUrl!.isNotEmpty)
-                        ? NetworkImage(_avatarUrl!)
-                        : null,
-                    child: (_avatarUrl == null || _avatarUrl!.isEmpty)
-                        ? Text(
-                            _nameController.text.isNotEmpty
-                                ? _nameController.text[0].toUpperCase()
-                                : 'A',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )
-                        : null,
+                    backgroundImage:
+                        (_avatarUrl != null && _avatarUrl!.isNotEmpty)
+                            ? NetworkImage(_avatarUrl!)
+                            : null,
+                    child:
+                        (_avatarUrl == null || _avatarUrl!.isEmpty)
+                            ? Text(
+                              _nameController.text.isNotEmpty
+                                  ? _nameController.text[0].toUpperCase()
+                                  : 'A',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 30,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                            : null,
                   ),
                 ),
               ),
@@ -247,24 +254,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: Row(
         children: [
           Expanded(
-            child: ElevatedButton(
+            child: OutlinedButton(
               onPressed: () {
-                Navigator.pop(context);
+                showExitConfirmationDialog(context);
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Color(0xFF00973A),
-                elevation: 0,
-                side: BorderSide(color: Color(0xFF00973A)),
-                padding: EdgeInsets.symmetric(vertical: 14),
+              style: OutlinedButton.styleFrom(
+                side: const BorderSide(color: Color(0xFF00973A)),
+                padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: Text('Batal'),
+              child: const Text(
+                'Batal',
+                style: TextStyle(
+                  color: Color(0xFF00973A),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
             ),
           ),
-          SizedBox(width: 12),
+          SizedBox(width: 20),
           Expanded(
             child: ElevatedButton(
               onPressed: _isFormValid ? _handleSave : null,
@@ -272,7 +283,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 backgroundColor: _isFormValid ? Color(0xFF00973A) : Colors.grey,
                 foregroundColor: Colors.white,
                 elevation: 0,
-                padding: EdgeInsets.symmetric(vertical: 14),
+                padding: EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),

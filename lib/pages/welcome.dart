@@ -18,7 +18,7 @@ class WelcomePage extends StatelessWidget {
                 'Selamat Datang\ndi Aplikasi',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Color(0xFF207A3E), // Warna hijau
+                  color: Color(0xFF207A3E),
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
@@ -29,7 +29,7 @@ class WelcomePage extends StatelessWidget {
               const Text(
                 'TrashSmart',
                 style: TextStyle(
-                  color: Color(0xFF00973A), // Warna #00973A
+                  color: Color(0xFF00973A),
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                 ),
@@ -46,15 +46,12 @@ class WelcomePage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder:
-                                  (context) => LoginPage(), // ✅ Ke LoginPage
+                              builder: (context) => LoginPage(),
                             ),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(
-                            0xFF00973A,
-                          ), // Menggunakan backgroundColor untuk warna tombol
+                          backgroundColor: const Color(0xFF00973A),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -62,7 +59,7 @@ class WelcomePage extends StatelessWidget {
                         ),
                         child: const Text(
                           'MASUK',
-                          style: TextStyle(color: Colors.white), // Teks putih
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),

@@ -25,8 +25,8 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
           backgroundColor: const Color(0xFF00973A),
           centerTitle: true,
           title: const Text(
-            "Artikel Kategori",
-            style: TextStyle(color: Colors.white),
+            "Informasi Kategori",
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -46,7 +46,9 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                         const Text(
                           "Jelantah",
                           style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 16),
                         _buildArtikel(),
@@ -72,7 +74,9 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                             child: Text(
                               "Pilih Bank Sampah Kami",
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -80,23 +84,28 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                             builder: (context, state) {
                               if (state.isLoading) {
                                 return const Center(
-                                    child: CircularProgressIndicator());
+                                  child: CircularProgressIndicator(),
+                                );
                               }
                               if (state.errorMessage != null) {
                                 return Center(
-                                    child: Text('Error: ${state.errorMessage}'));
+                                  child: Text('Error: ${state.errorMessage}'),
+                                );
                               }
                               final bankList = state.bankList;
                               if (bankList.isEmpty) {
                                 return const Center(
-                                    child: Text('Belum ada data bank sampah.'));
+                                  child: Text('Belum ada data bank sampah.'),
+                                );
                               }
                               return Column(
                                 children: [
                                   ...List.generate(bankList.length, (index) {
                                     final bank = bankList[index];
                                     return Padding(
-                                      padding: const EdgeInsets.only(bottom: 12),
+                                      padding: const EdgeInsets.only(
+                                        bottom: 12,
+                                      ),
                                       child: _buildBankSampahItem(
                                         index: index,
                                         nama: bank.bankSampahNama ?? '-',
@@ -109,43 +118,66 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                                   SizedBox(
                                     width: double.infinity,
                                     child: ElevatedButton(
-                                      onPressed: selectedBankIndex != null
-                                          ? () {
-                                              final selectedBank = bankList[selectedBankIndex!];
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => FormPage(
-                                                    kategoriTerpilih: 'Jelantah',
-                                                    bankSampahNama: selectedBank.bankSampahNama ?? '-',
-                                                    bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                      onPressed:
+                                          selectedBankIndex != null
+                                              ? () {
+                                                final selectedBank =
+                                                    bankList[selectedBankIndex!];
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (context) => FormPage(
+                                                          kategoriTerpilih:
+                                                              'Jelantah',
+                                                          bankSampahNama:
+                                                              selectedBank
+                                                                  .bankSampahNama ??
+                                                              '-',
+                                                          bankSampahAlamat:
+                                                              selectedBank
+                                                                  .bankSampahAlamat ??
+                                                              '-',
+                                                        ),
                                                   ),
-                                                ),
-                                              );
-                                            }
-                                          : null,
+                                                );
+                                              }
+                                              : null,
                                       style: ButtonStyle(
-                                        backgroundColor: MaterialStateProperty.all(
-                                            const Color(0xFF00973A)),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                              const Color(0xFF00973A),
+                                            ),
                                         foregroundColor:
-                                            MaterialStateProperty.all(Colors.white),
+                                            MaterialStateProperty.all(
+                                              Colors.white,
+                                            ),
                                         padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(vertical: 16),
+                                          const EdgeInsets.symmetric(
+                                            vertical: 16,
+                                          ),
                                         ),
                                         shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
                                           ),
                                         ),
                                         elevation:
-                                            MaterialStateProperty.resolveWith<double>(
-                                                (states) =>
-                                                    states.contains(
-                                                            MaterialState.disabled)
-                                                        ? 0
-                                                        : 4),
+                                            MaterialStateProperty.resolveWith<
+                                              double
+                                            >(
+                                              (states) =>
+                                                  states.contains(
+                                                        MaterialState.disabled,
+                                                      )
+                                                      ? 0
+                                                      : 4,
+                                            ),
                                         shadowColor: MaterialStateProperty.all(
-                                            Colors.grey.withOpacity(0.4)),
+                                          Colors.grey.withOpacity(0.4),
+                                        ),
                                       ),
                                       child: const Text("Tukar Sekarang"),
                                     ),
@@ -173,7 +205,9 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
       children: [
         Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
@@ -193,44 +227,70 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                 padding: EdgeInsets.all(16),
                 child: Text(
                   "♻️ Kenali Jelantah: Limbah yang Bisa Jadi Berkah!",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text(
-            "Jelantah adalah minyak goreng bekas yang sudah digunakan berkali-kali. Biasanya warnanya menggelap dan kualitasnya menurun.",
-          ),
-          SizedBox(height: 8),
-          Text("Dampak membuang jelantah sembarangan:",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("• Menyumbat saluran air"),
-          Text("• Mencemari tanah & air"),
-          Text("• Menjadi sarang penyakit & serangga"),
-          Text("• Berbahaya jika terus digunakan"),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Jelantah adalah minyak goreng bekas yang sudah digunakan berkali-kali. Biasanya warnanya menggelap dan kualitasnya menurun.",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Dampak membuang jelantah sembarangan:",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            SizedBox(height: 8),
+            Text("• Menyumbat saluran air", style: TextStyle(fontSize: 13)),
+            Text("• Mencemari tanah & air", style: TextStyle(fontSize: 13)),
+            Text(
+              "• Menjadi sarang penyakit & serangga",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Berbahaya jika terus digunakan",
+              style: TextStyle(fontSize: 13),
+            ),
+          ],
+        ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Cara Mengelola Jelantah:",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("• Dinginkan & saring, simpan di wadah\n  tertutup"),
-          Text("• Jangan buang ke selokan"),
-          Text("• Serahkan ke bank jelantah atau\n   program daur ulang"),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Cara Mengelola Jelantah:",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "• Dinginkan & saring, simpan di wadah\n  tertutup",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text("• Jangan buang ke selokan", style: TextStyle(fontSize: 13)),
+            Text(
+              "• Serahkan ke bank jelantah atau\n   program daur ulang",
+              style: TextStyle(fontSize: 13),
+            ),
+          ],
+        ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text(
-            "Jelantahmu Berharga! Mulai dari Rp3.000/liter, donasikan dan selamatkan lingkungan!",
-          ),
-          SizedBox(height: 8),
-          Text("Yuk, Tukarkan Sekarang!",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Jelantahmu Berharga! Mulai dari Rp3.000/liter, donasikan dan selamatkan lingkungan!",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Yuk, Tukarkan Sekarang!",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -287,10 +347,11 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                     child: Image.asset(
                       imagePath,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.error, color: Colors.red),
-                      ),
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.error, color: Colors.red),
+                          ),
                     ),
                   ),
                   Expanded(
@@ -303,7 +364,9 @@ class _JelantahDetailPageState extends State<JelantahDetailPage> {
                           Text(
                             nama,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(alamat, style: const TextStyle(fontSize: 12)),

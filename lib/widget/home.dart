@@ -39,13 +39,16 @@ class _HalamanUtamaState extends State<HalamanUtama> {
   }
 
   Future<void> _loadUserData() async {
-    setState(() { isLoadingUser = true; });
+    setState(() {
+      isLoadingUser = true;
+    });
     try {
       final authData = await AuthLocalDatasource().getAuthData();
       final prefs = await SharedPreferences.getInstance();
       String? avatar;
       if (authData.user != null && authData.user!.username != null) {
-        if (authData.user!.avatar != null && authData.user!.avatar!.imagePath != null) {
+        if (authData.user!.avatar != null &&
+            authData.user!.avatar!.imagePath != null) {
           avatar = '${Variable.baseUrl}/${authData.user!.avatar!.imagePath}';
           await prefs.setString('avatar_url', avatar);
         } else {
@@ -58,26 +61,36 @@ class _HalamanUtamaState extends State<HalamanUtama> {
           isLoadingUser = false;
         });
       } else {
-        setState(() { isLoadingUser = false; });
+        setState(() {
+          isLoadingUser = false;
+        });
       }
     } catch (e) {
       print('Error loading user data: $e');
-      setState(() { isLoadingUser = false; });
+      setState(() {
+        isLoadingUser = false;
+      });
     }
   }
 
   Future<void> _loadVideos() async {
-    setState(() { isLoadingVideos = true; });
+    setState(() {
+      isLoadingVideos = true;
+    });
     final result = await AuthRemoteDatasource().getAllVideos();
     result.fold(
       (error) {
         print("Gagal ambil video: $error");
-        setState(() { isLoadingVideos = false; });
+        setState(() {
+          isLoadingVideos = false;
+        });
       },
       (videos) {
         videos.sort((a, b) {
-          final aDate = DateTime.tryParse(a['created_at'] ?? '') ?? DateTime.now();
-          final bDate = DateTime.tryParse(b['created_at'] ?? '') ?? DateTime.now();
+          final aDate =
+              DateTime.tryParse(a['created_at'] ?? '') ?? DateTime.now();
+          final bDate =
+              DateTime.tryParse(b['created_at'] ?? '') ?? DateTime.now();
           return bDate.compareTo(aDate);
         });
         if (!mounted) return;
@@ -126,7 +139,6 @@ class _HalamanUtamaState extends State<HalamanUtama> {
     {"icon": "assets/images/jelantah.png", "label": "Jelantah"},
   ];
 
-  // Tambahkan widget loading custom
   Widget customLoadingWidget() {
     return Center(
       child: SizedBox(
@@ -142,7 +154,6 @@ class _HalamanUtamaState extends State<HalamanUtama> {
 
   @override
   Widget build(BuildContext context) {
-    // Jika masih loading user atau video, tampilkan loading custom
     if (isLoadingUser || isLoadingVideos) {
       return Scaffold(
         backgroundColor: Colors.white,
@@ -172,36 +183,44 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                     ),
                     const Text(
                       "Ubah sampahmu menjadi Berkah",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
                 GestureDetector(
                   onTap: () async {
-                    await Navigator.push(context, MaterialPageRoute(builder: (_) => ProfilePages()));
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => ProfilePages()),
+                    );
                     await _loadUserData();
                   },
                   child: CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.green,
-                    backgroundImage: (avatarUrl != null && avatarUrl!.isNotEmpty)
-                        ? NetworkImage(avatarUrl!)
-                        : null,
-                    child: (avatarUrl == null || avatarUrl!.isEmpty)
-                        ? Text(
-                            username.isNotEmpty ? username[0].toUpperCase() : "U",
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 28),
-                          )
-                        : null,
+                    backgroundImage:
+                        (avatarUrl != null && avatarUrl!.isNotEmpty)
+                            ? NetworkImage(avatarUrl!)
+                            : null,
+                    child:
+                        (avatarUrl == null || avatarUrl!.isEmpty)
+                            ? Text(
+                              username.isNotEmpty
+                                  ? username[0].toUpperCase()
+                                  : "U",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 28,
+                              ),
+                            )
+                            : null,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 50),
 
-            // Progres Donasi
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -213,24 +232,32 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                 children: [
                   const Text(
                     "Progres Penukaranmu",
-                    style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Icon(Icons.star, color: Color(0xFFFDC901), size: 62),
+                      const Icon(
+                        Icons.star,
+                        color: Color(0xFFFDC901),
+                        size: 62,
+                      ),
                       const SizedBox(width: 8),
                       isLoadingDonasi
                           ? customLoadingWidget()
                           : Text(
-                              "$totalDonasi",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 36,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            "$totalDonasi",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 36,
+                              fontWeight: FontWeight.bold,
                             ),
+                          ),
                       const SizedBox(width: 8),
                       Padding(
                         padding: const EdgeInsets.only(top: 20),
@@ -260,55 +287,89 @@ class _HalamanUtamaState extends State<HalamanUtama> {
             ),
 
             const SizedBox(height: 35),
-            const Text("Kategori Sampah", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              "Kategori Sampah",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 35),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: categories.map((cat) {
-                  return GestureDetector(
-                    onTap: () {
-                      Widget targetPage;
-                      switch (cat['label']) {
-                        case 'Plastik': targetPage = PlastikDetailPage(); break;
-                        case 'Kertas': targetPage = KertasDetailPage(); break;
-                        case 'Logam': targetPage = LogamDetailPage(); break;
-                        case 'Organik': targetPage = OrganikDetailPage(); break;
-                        case 'Tekstil': targetPage = TekstilDetailPage(); break;
-                        case 'Kaca': targetPage = KacaDetailPage(); break;
-                        case 'Jelantah': targetPage = JelantahDetailPage(); break;
-                        default: targetPage = CategoryPage(label: cat['label']);
-                      }
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => targetPage));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 19),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)],
-                            ),
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 30,
-                              child: Image.asset(cat['icon'], width: 40, height: 40),
-                            ),
+                children:
+                    categories.map((cat) {
+                      return GestureDetector(
+                        onTap: () {
+                          Widget targetPage;
+                          switch (cat['label']) {
+                            case 'Plastik':
+                              targetPage = PlastikDetailPage();
+                              break;
+                            case 'Kertas':
+                              targetPage = KertasDetailPage();
+                              break;
+                            case 'Logam':
+                              targetPage = LogamDetailPage();
+                              break;
+                            case 'Organik':
+                              targetPage = OrganikDetailPage();
+                              break;
+                            case 'Tekstil':
+                              targetPage = TekstilDetailPage();
+                              break;
+                            case 'Kaca':
+                              targetPage = KacaDetailPage();
+                              break;
+                            case 'Jelantah':
+                              targetPage = JelantahDetailPage();
+                              break;
+                            default:
+                              targetPage = CategoryPage(label: cat['label']);
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => targetPage),
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 19),
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 4,
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.white,
+                                  radius: 30,
+                                  child: Image.asset(
+                                    cat['icon'],
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(cat['label']),
+                            ],
                           ),
-                          const SizedBox(height: 5),
-                          Text(cat['label']),
-                        ],
-                      ),
-                    ),
-                  );
-                }).toList(),
+                        ),
+                      );
+                    }).toList(),
               ),
             ),
 
             const SizedBox(height: 30),
-            const Text('Video Terbaru', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              'Video Terbaru',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
 
             ...(sortedVideos.take(2)).map((video) {
@@ -316,18 +377,21 @@ class _HalamanUtamaState extends State<HalamanUtama> {
               final id = _youtubeVideoId(url);
               final title = video['title'] ?? 'Tanpa Judul';
               final author = video['author'] ?? 'Admin';
-              final thumb = video['thumbnail'] ?? 'https://img.youtube.com/vi/$id/0.jpg';
+              final thumb =
+                  video['thumbnail'] ?? 'https://img.youtube.com/vi/$id/0.jpg';
 
               return GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => VideoPlayerPage(
-                      videos: sortedVideos,
-                      initialUrl: url,
+                onTap:
+                    () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (_) => VideoPlayerPage(
+                              videos: sortedVideos,
+                              initialUrl: url,
+                            ),
+                      ),
                     ),
-                  ),
-                ),
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.only(right: 12),
@@ -352,7 +416,11 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                               ),
                             ),
                           ),
-                          Icon(Icons.play_circle_fill, size: 40, color: Colors.white.withOpacity(0.8)),
+                          Icon(
+                            Icons.play_circle_fill,
+                            size: 40,
+                            color: Colors.white.withOpacity(0.8),
+                          ),
                         ],
                       ),
                       const SizedBox(width: 10),
@@ -360,7 +428,12 @@ class _HalamanUtamaState extends State<HalamanUtama> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                            Text(
+                              title,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             const SizedBox(height: 4),
                             Row(
                               children: [

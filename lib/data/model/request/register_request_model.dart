@@ -16,18 +16,18 @@ class RegisterRequestModel {
   });
 
   Map<String, dynamic> toJson() {
-  return {
-    'username': username, // <- ganti ini
-    'phone': phone,
-    'email': email,
-    'password': password,
-    'password_confirmation': confirmPassword,
-  };
-}
+    return {
+      'username': username,
+      'phone': phone,
+      'email': email,
+      'password': password,
+      'password_confirmation': confirmPassword,
+    };
+  }
 
   factory RegisterRequestModel.fromJson(Map<String, dynamic> json) {
     return RegisterRequestModel(
-      username: json['username'], // sesuaikan dengan field input dari Laravel
+      username: json['username'],
       phone: json['phone'],
       email: json['email'],
       password: json['password'],

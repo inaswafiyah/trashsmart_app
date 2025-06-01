@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trashsmart/widget/bottom.dart';
-import 'package:trashsmart/profile/riwayat_penukaran.dart';
-import 'package:trashsmart/profile/riwayat_penukaran_model.dart';
+import 'package:trashsmart/riwayat_resi/riwayat_penukaran.dart';
+import 'package:trashsmart/riwayat_resi/riwayat_penukaran_model.dart';
 
 class ResiPenyerahanPage extends StatelessWidget {
   final String nama;
@@ -63,15 +63,11 @@ class ResiPenyerahanPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                       vertical: 50.0,
                       horizontal: 16.0,
-                    ), // Jarak atas-bawah 50px
+                    ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.location_on,
-                          color: Colors.red, // Ubah warna jadi merah
-                          size: 24,
-                        ),
+                        Icon(Icons.location_on, color: Colors.red, size: 24),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Column(
@@ -90,8 +86,7 @@ class ResiPenyerahanPage extends StatelessWidget {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontWeight:
-                                      FontWeight.bold, // Ubah dari w500 ke bold
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                   fontSize: 11,
                                 ),
@@ -130,8 +125,8 @@ class ResiPenyerahanPage extends StatelessWidget {
                         const Text(
                           'Informasi Pengguna:',
                           style: TextStyle(
-                            fontWeight: FontWeight.w900, // Sangat tebal
-                            fontSize: 15, // Ukuran lebih kecil
+                            fontWeight: FontWeight.w900,
+                            fontSize: 15,
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -154,8 +149,8 @@ class ResiPenyerahanPage extends StatelessWidget {
                             ...kategoriTerpilih.map(
                               (kategori) => buildInfoRow(
                                 kategori,
-                                kategoriHarga[kategori] != null
-                                    ? 'Rp. ${currencyFormat.format(kategoriHarga[kategori])}/kg'
+                                kategoriHarga[kategori.toLowerCase()] != null
+                                    ? 'Rp. ${currencyFormat.format(kategoriHarga[kategori.toLowerCase()])}/kg'
                                     : '-',
                               ),
                             ),
@@ -173,8 +168,7 @@ class ResiPenyerahanPage extends StatelessWidget {
                         const Text(
                           'Nilai tukar akan ditambah setelah\npenimbangan di lokasi drop-off',
                           style: TextStyle(
-                            fontWeight:
-                                FontWeight.bold, // Ubah dari w500 ke bold
+                            fontWeight: FontWeight.bold,
                             color: Colors.black,
                             fontSize: 14,
                           ),
@@ -204,6 +198,10 @@ class ResiPenyerahanPage extends StatelessWidget {
                         jenisSampah: jenisSampah,
                         bankSampahNama: bankSampahNama,
                         bankSampahAlamat: bankSampahAlamat,
+                        nama: nama,
+                        noTelepon: noTelepon,
+                        kategoriHarga: kategoriHarga,
+                        kategoriTerpilih: kategoriTerpilih,
                       ),
                     );
                     Navigator.of(context).pushAndRemoveUntil(
@@ -221,8 +219,6 @@ class ResiPenyerahanPage extends StatelessWidget {
                 ),
               ),
             ),
-
-            // Tambahin ini untuk jarak bawah
           ],
         ),
       ),
@@ -239,10 +235,7 @@ class ResiPenyerahanPage extends StatelessWidget {
             flex: 4,
             child: Text(
               title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold, // Lebih tebal
-                fontSize: 13,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
           ),
           Expanded(
@@ -253,7 +246,7 @@ class ResiPenyerahanPage extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 13,
                 color: Colors.black,
-                fontWeight: FontWeight.bold, // Ubah dari w500 ke bold
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),

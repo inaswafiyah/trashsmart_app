@@ -7,7 +7,6 @@ import 'package:trashsmart/data/model/request/bank_request_model.dart';
 import 'package:trashsmart/data/model/response/bank_response_model.dart';
 import 'auth_local_datasource.dart';
 
-
 class BankRemoteDataSource {
   Future<Either<String, List<Data>>> getBankSampahList() async {
     try {
@@ -34,7 +33,9 @@ class BankRemoteDataSource {
     }
   }
 
-  Future<Either<String, BankResponseModel>> createBankSampah(BankRequestModel request) async {
+  Future<Either<String, BankResponseModel>> createBankSampah(
+    BankRequestModel request,
+  ) async {
     try {
       final authData = await AuthLocalDatasource().getAuthData();
 
@@ -57,6 +58,4 @@ class BankRemoteDataSource {
       return Left('Terjadi kesalahan: $e');
     }
   }
-
-  // Kamu bisa buat method update dan delete dengan pola yang sama
 }

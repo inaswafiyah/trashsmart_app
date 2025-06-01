@@ -13,16 +13,13 @@ class EdukasiDetailPage extends StatelessWidget {
         ),
         backgroundColor: const Color(0xFF00973A),
         centerTitle: true,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ), // Bikin icon back jadi putih
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Card Maskot
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -82,7 +79,7 @@ class EdukasiDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 35),
-            // Card Paragraf Penjelasan
+
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,

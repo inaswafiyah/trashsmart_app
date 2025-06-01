@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:trashsmart/widget/bottom.dart';
 
-// Fungsi untuk menampilkan popup berhasil isi form
-// Mengembalikan Future<bool> yang false saat tombol ditekan
 Future<bool> BerhasilMengisiForm(BuildContext context) {
   return showDialog<bool>(
     context: context,
@@ -19,22 +17,15 @@ Future<bool> BerhasilMengisiForm(BuildContext context) {
                 width: 80,
                 height: 80,
                 decoration: const BoxDecoration(
-                  color:  Color(0xFF00973A),
+                  color: Color(0xFF00973A),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.check,
-                  color: Colors.white,
-                  size: 40,
-                ),
+                child: const Icon(Icons.check, color: Colors.white, size: 40),
               ),
               const SizedBox(height: 16),
               const Text(
                 'Berhasil',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
               const Text(
@@ -47,9 +38,8 @@ Future<bool> BerhasilMengisiForm(BuildContext context) {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop(false); // Tutup popup dulu
+                    Navigator.of(context).pop(false);
 
-                    // Navigasi ke HomePage dan hapus semua halaman sebelumnya
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (_) => const Bottom()),
                       (route) => false,

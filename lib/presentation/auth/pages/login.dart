@@ -303,8 +303,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: ElevatedButton(
                       onPressed: isFilled && !isLoading ? _login : null,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        backgroundColor: isFilled && !isLoading
+                            ? const Color(0xFF00973A)
+                            : Colors.grey[300],
+                        padding: const EdgeInsets.symmetric(vertical: 14),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -315,12 +317,14 @@ class _LoginPageState extends State<LoginPage> {
                           ? const CircularProgressIndicator(
                               color: Color(0xFF605D64),
                             )
-                          : const Text(
+                          : Text(
                               'Masuk',
                               style: TextStyle(
-                                color: Color(0xFF605D64), // warna text Masuk
+                                color: isFilled && !isLoading
+                                    ? Colors.white
+                                    : const Color(0xFF605D64),
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold, // bold
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                     ),

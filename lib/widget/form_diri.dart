@@ -34,7 +34,7 @@ class _FormPageState extends State<FormPage> {
     "Tekstil",
     "Kaca",
     "Jelantah",
-    "Organik"
+    "Organik",
   ];
 
   Set<String> selectedCategories = {};
@@ -47,12 +47,13 @@ class _FormPageState extends State<FormPage> {
 
   Map<String, int> kategoriHarga = {};
 
-  BuildContext? dialogContext; // Tambahkan ini
+  BuildContext? dialogContext;
 
   @override
   void initState() {
     super.initState();
-    lockedCategory = widget.kategoriTerpilih.isNotEmpty ? widget.kategoriTerpilih : null;
+    lockedCategory =
+        widget.kategoriTerpilih.isNotEmpty ? widget.kategoriTerpilih : null;
     if (lockedCategory != null) {
       selectedCategories.add(lockedCategory!);
     }
@@ -66,10 +67,7 @@ class _FormPageState extends State<FormPage> {
 
     final response = await http.get(
       Uri.parse('${Variable.baseUrl}/api/api-categories'),
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
     );
     print(response.statusCode);
     print(response.body);
@@ -99,7 +97,8 @@ class _FormPageState extends State<FormPage> {
       selectedCategories.where((c) => c.isNotEmpty).isNotEmpty;
 
   Future<void> submitForm() async {
-    final filteredCategories = selectedCategories.where((c) => c.isNotEmpty).toList();
+    final filteredCategories =
+        selectedCategories.where((c) => c.isNotEmpty).toList();
 
     if (filteredCategories.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -124,7 +123,9 @@ class _FormPageState extends State<FormPage> {
 
       if (token.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Token tidak ditemukan, silakan login ulang')),
+          const SnackBar(
+            content: Text('Token tidak ditemukan, silakan login ulang'),
+          ),
         );
         return;
       }
@@ -154,7 +155,6 @@ class _FormPageState extends State<FormPage> {
         body: jsonEncode(body),
       );
 
-      // Tutup loading dialog dengan context dialog yang benar
       if (dialogContext != null && Navigator.of(dialogContext!).canPop()) {
         Navigator.of(dialogContext!).pop();
       }
@@ -162,16 +162,17 @@ class _FormPageState extends State<FormPage> {
       if (response.statusCode == 201) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => ResiPenyerahanPage(
-              nama: nameController.text.trim(),
-              noTelepon: phoneController.text.trim(),
-              tanggalDropOff: DateTime.now().toString().substring(0, 10),
-              jenisSampah: selectedCategories.join(', '),
-              bankSampahNama: widget.bankSampahNama,
-              bankSampahAlamat: widget.bankSampahAlamat,
-              kategoriHarga: kategoriHarga,
-              kategoriTerpilih: selectedCategories.toList(),
-            ),
+            builder:
+                (_) => ResiPenyerahanPage(
+                  nama: nameController.text.trim(),
+                  noTelepon: phoneController.text.trim(),
+                  tanggalDropOff: DateTime.now().toString().substring(0, 10),
+                  jenisSampah: selectedCategories.join(', '),
+                  bankSampahNama: widget.bankSampahNama,
+                  bankSampahAlamat: widget.bankSampahAlamat,
+                  kategoriHarga: kategoriHarga,
+                  kategoriTerpilih: selectedCategories.toList(),
+                ),
           ),
         );
       } else {
@@ -197,9 +198,9 @@ class _FormPageState extends State<FormPage> {
       if (dialogContext != null && Navigator.of(dialogContext!).canPop()) {
         Navigator.of(dialogContext!).pop();
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi error: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Terjadi error: $e')));
     }
   }
 
@@ -211,11 +212,11 @@ class _FormPageState extends State<FormPage> {
         dialogContext = ctx;
         return Center(
           child: SizedBox(
-            width: 42, // Lebih kecil
+            width: 42,
             height: 42,
             child: CircularProgressIndicator(
-              strokeWidth: 7, // Lebih tebal
-              color: Color(0xE500973A), // Hijau transparan sesuai permintaan
+              strokeWidth: 7,
+              color: Color(0xE500973A),
             ),
           ),
         );
@@ -242,39 +243,53 @@ class _FormPageState extends State<FormPage> {
         child: ListView(
           children: [
             const SizedBox(height: 20),
-            const Text("Jenis Sampah yang diterima",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text(
+              "Jenis Sampah yang diterima",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 24),
             buildTextField("Nama", nameController),
-            buildTextField("No Telephone", phoneController,
-                keyboardType: TextInputType.phone),
-            buildTextField("Jumlah Sampah", trashAmountController,
-                keyboardType: TextInputType.text),
+            buildTextField(
+              "No Telephone",
+              phoneController,
+              keyboardType: TextInputType.phone,
+            ),
+            buildTextField(
+              "Jumlah Sampah",
+              trashAmountController,
+              keyboardType: TextInputType.text,
+            ),
             const SizedBox(height: 16),
-            const Text("Kategori", style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              "Kategori",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             Column(children: _buildCategoryRows()),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: isFormComplete ? () => submitForm() : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isFormComplete
-                    ? primaryColor
-                    : Colors.grey.shade400.withOpacity(0.5),
+                backgroundColor:
+                    isFormComplete
+                        ? primaryColor
+                        : Colors.grey.shade400.withOpacity(0.5),
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               child: Text(
                 "Selesai",
                 style: TextStyle(
-                  color: isFormComplete
-                      ? Colors.white
-                      : const Color.fromARGB(255, 85, 84, 84),
+                  color:
+                      isFormComplete
+                          ? Colors.white
+                          : const Color.fromARGB(255, 85, 84, 84),
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -288,31 +303,32 @@ class _FormPageState extends State<FormPage> {
       List<Widget> rowItems = [];
 
       for (int j = i; j < i + 3 && j < categories.length; j++) {
-        final isLocked = lockedCategory != null && categories[j] == lockedCategory;
-        final isDisabled = lockedCategory != null && categories[j] != lockedCategory;
+        final isLocked =
+            lockedCategory != null && categories[j] == lockedCategory;
+        final isDisabled =
+            lockedCategory != null && categories[j] != lockedCategory;
         final isChecked = selectedCategories.contains(categories[j]);
 
         rowItems.add(
           Expanded(
             child: GestureDetector(
-              onTap: isDisabled
-                  ? null
-                  : () {
-                      setState(() {
-                        if (lockedCategory == null) {
-                          // Multi select: tambah/hapus kategori
-                          if (isChecked) {
-                            selectedCategories.remove(categories[j]);
+              onTap:
+                  isDisabled
+                      ? null
+                      : () {
+                        setState(() {
+                          if (lockedCategory == null) {
+                            if (isChecked) {
+                              selectedCategories.remove(categories[j]);
+                            } else {
+                              selectedCategories.add(categories[j]);
+                            }
                           } else {
+                            selectedCategories.clear();
                             selectedCategories.add(categories[j]);
                           }
-                        } else {
-                          // Single select: hanya satu kategori (dari artikel)
-                          selectedCategories.clear();
-                          selectedCategories.add(categories[j]);
-                        }
-                      });
-                    },
+                        });
+                      },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -320,22 +336,14 @@ class _FormPageState extends State<FormPage> {
                     width: 24,
                     height: 24,
                     decoration: BoxDecoration(
-                      color: isChecked
-                          ? Color(0xFF0A7C36)
-                          : Color(0xFFF5F5F5),
-                      border: Border.all(
-                        color: Color(0xFFAEA9B1),
-                        width: 2,
-                      ),
+                      color: isChecked ? Color(0xFF0A7C36) : Color(0xFFF5F5F5),
+                      border: Border.all(color: Color(0xFFAEA9B1), width: 2),
                       borderRadius: BorderRadius.circular(8),
                     ),
-                    child: isChecked
-                        ? Icon(
-                            Icons.check,
-                            size: 16,
-                            color: Colors.white,
-                          )
-                        : null,
+                    child:
+                        isChecked
+                            ? Icon(Icons.check, size: 16, color: Colors.white)
+                            : null,
                   ),
                   const SizedBox(width: 4),
                   Flexible(
@@ -370,17 +378,17 @@ class _FormPageState extends State<FormPage> {
     return rows;
   }
 
-  Widget buildTextField(String label, TextEditingController controller,
-      {TextInputType keyboardType = TextInputType.text}) {
+  Widget buildTextField(
+    String label,
+    TextEditingController controller, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     final bool isFilled = controller.text.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "$label:",
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+        Text("$label:", style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 6),
         TextField(
           controller: controller,
@@ -394,21 +402,23 @@ class _FormPageState extends State<FormPage> {
             ),
             filled: true,
             fillColor: isFilled ? Colors.white : Colors.grey.shade300,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            enabledBorder: isFilled
-                ? OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
-                  )
-                : OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
-                  ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 12,
+            ),
+            enabledBorder:
+                isFilled
+                    ? OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Color(0xFFBDBDBD)),
+                    )
+                    : OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  const BorderSide(color: Color(0xFFBDBDBD), width: 2),
+              borderSide: const BorderSide(color: Color(0xFFBDBDBD), width: 2),
             ),
           ),
           onChanged: (_) => setState(() {}),

@@ -254,17 +254,16 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: ElevatedButton(
                         onPressed: _isLoading ? null : _validateAndSubmit,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              _allFieldsFilled && !_isLoading
-                                  ? const Color(0xFF00973A)
-                                  : Colors.grey[300],
+                          backgroundColor: _allFieldsFilled && !_isLoading
+                              ? const Color(0xFF00973A)
+                              : Colors.grey[300],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           elevation: 0,
                         ),
-                        child: _isLoading 
+                        child: _isLoading
                             ? const SizedBox(
                                 height: 30,
                                 width: 30,
@@ -273,11 +272,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
+                            : Text(
                                 'Daftar',
                                 style: TextStyle(
-                                  color: Color(0xFF605D64), // warna #605D64
-                                  fontWeight: FontWeight.bold, // bold
+                                  color: _allFieldsFilled && !_isLoading
+                                      ? Colors.white
+                                      : const Color(0xFF605D64),
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                       ),

@@ -6,7 +6,6 @@ import 'package:trashsmart/edukasi/video_player.dart';
 class HalamanEdukasiPage extends StatelessWidget {
   const HalamanEdukasiPage({super.key});
 
-  // Widget loading custom
   Widget customLoadingWidget() {
     return const Center(
       child: SizedBox(
@@ -44,11 +43,12 @@ class HalamanEdukasiPage extends StatelessWidget {
 
           final videos = snapshot.data!.getOrElse(() => []);
 
-          // Urutkan berdasarkan created_at (atau field tanggal lain dari backend)
           videos.sort((a, b) {
-            final aDate = DateTime.tryParse(a['created_at'] ?? '') ?? DateTime(2000);
-            final bDate = DateTime.tryParse(b['created_at'] ?? '') ?? DateTime(2000);
-            return bDate.compareTo(aDate); // terbaru di atas
+            final aDate =
+                DateTime.tryParse(a['created_at'] ?? '') ?? DateTime(2000);
+            final bDate =
+                DateTime.tryParse(b['created_at'] ?? '') ?? DateTime(2000);
+            return bDate.compareTo(aDate);
           });
 
           return ListView(
@@ -68,19 +68,22 @@ class HalamanEdukasiPage extends StatelessWidget {
                 final title = video['title'] ?? 'Tanpa Judul';
                 final author = video['author'] ?? 'Admin Trashsmart';
                 final id = VideoPlayerPage.youtubeVideoId(url);
-                final thumb = video['thumbnail'] ??
+                final thumb =
+                    video['thumbnail'] ??
                     'https://img.youtube.com/vi/$id/0.jpg';
 
                 return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => VideoPlayerPage(
-                        videos: videos,
-                        initialUrl: url,
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (_) => VideoPlayerPage(
+                                videos: videos,
+                                initialUrl: url,
+                              ),
+                        ),
                       ),
-                    ),
-                  ),
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 16),
                     padding: const EdgeInsets.only(right: 8),
@@ -113,12 +116,14 @@ class HalamanEdukasiPage extends StatelessWidget {
                                   'https://img.youtube.com/vi/$id/0.jpg',
                                   fit: BoxFit.cover,
                                   alignment: Alignment.center,
-                                  loadingBuilder: (context, child, progress) =>
-                                      progress == null
-                                          ? child
-                                          : customLoadingWidget(),
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Container(color: Colors.grey[300]),
+                                  loadingBuilder:
+                                      (context, child, progress) =>
+                                          progress == null
+                                              ? child
+                                              : customLoadingWidget(),
+                                  errorBuilder:
+                                      (context, error, stackTrace) =>
+                                          Container(color: Colors.grey[300]),
                                 ),
                               ),
                             ),
@@ -185,11 +190,7 @@ class HalamanEdukasiPage extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            'assets/images/maskott.png',
-            width: 120,
-            height: 140,
-          ),
+          Image.asset('assets/images/maskott.png', width: 120, height: 140),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -197,32 +198,25 @@ class HalamanEdukasiPage extends StatelessWidget {
               children: [
                 const Text(
                   'Mengapa Edukasi',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const Text(
                   'Tentang Sampah',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const Text(
                   'Itu Penting?',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => const EdukasiDetailPage()),
-                  ),
+                  onPressed:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const EdukasiDetailPage(),
+                        ),
+                      ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFFDD00),
                     foregroundColor: Colors.black,

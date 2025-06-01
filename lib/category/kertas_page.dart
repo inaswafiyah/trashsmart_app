@@ -22,7 +22,10 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
       create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Informasi Kategori"),
+          title: const Text(
+            "Informasi Kategori",
+            style: TextStyle(fontSize: 18),
+          ),
           centerTitle: true,
           backgroundColor: const Color(0xFF00973A),
           foregroundColor: Colors.white,
@@ -43,7 +46,7 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
                               const Text(
                                 "KERTAS",
                                 style: TextStyle(
-                                  fontSize: 24,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
@@ -72,7 +75,7 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
                                   child: Text(
                                     "Pilih Bank Sampah Kami",
                                     style: TextStyle(
-                                      fontSize: 16,
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -81,70 +84,126 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
                                 BlocBuilder<BankBloc, BankState>(
                                   builder: (context, state) {
                                     if (state.isLoading) {
-                                      return const Center(child: CircularProgressIndicator());
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
                                     }
                                     if (state.errorMessage != null) {
-                                      return Center(child: Text('Error: ${state.errorMessage}'));
+                                      return Center(
+                                        child: Text(
+                                          'Error: ${state.errorMessage}',
+                                        ),
+                                      );
                                     }
                                     final bankList = state.bankList;
                                     if (bankList.isEmpty) {
-                                      return const Center(child: Text('Belum ada data bank sampah.'));
+                                      return const Center(
+                                        child: Text(
+                                          'Belum ada data bank sampah.',
+                                        ),
+                                      );
                                     }
                                     return Column(
                                       children: [
-                                        ...List.generate(bankList.length, (index) {
+                                        ...List.generate(bankList.length, (
+                                          index,
+                                        ) {
                                           final bank = bankList[index];
                                           return Column(
                                             children: [
                                               _buildBankSampahItem(
                                                 index: index,
-                                                nama: bank.bankSampahNama ?? '-',
-                                                alamat: bank.bankSampahAlamat ?? '-',
-                                                imagePath: "assets/images/map.png",
+                                                nama:
+                                                    bank.bankSampahNama ?? '-',
+                                                alamat:
+                                                    bank.bankSampahAlamat ??
+                                                    '-',
+                                                imagePath:
+                                                    "assets/images/map.png",
                                               ),
                                               const SizedBox(height: 12),
                                             ],
                                           );
                                         }),
                                         Padding(
-                                          padding: const EdgeInsets.only(bottom: 24),
+                                          padding: const EdgeInsets.only(
+                                            bottom: 24,
+                                          ),
                                           child: SizedBox(
                                             width: double.infinity,
                                             child: ElevatedButton(
-                                              onPressed: selectedBankIndex != null
-                                                  ? () {
-                                                      final selectedBank = bankList[selectedBankIndex!];
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) => FormPage(
-                                                            kategoriTerpilih: 'Kertas',
-                                                            bankSampahNama: selectedBank.bankSampahNama ?? '-',
-                                                            bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                              onPressed:
+                                                  selectedBankIndex != null
+                                                      ? () {
+                                                        final selectedBank =
+                                                            bankList[selectedBankIndex!];
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (
+                                                                  context,
+                                                                ) => FormPage(
+                                                                  kategoriTerpilih:
+                                                                      'Kertas',
+                                                                  bankSampahNama:
+                                                                      selectedBank
+                                                                          .bankSampahNama ??
+                                                                      '-',
+                                                                  bankSampahAlamat:
+                                                                      selectedBank
+                                                                          .bankSampahAlamat ??
+                                                                      '-',
+                                                                ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  : null,
+                                                        );
+                                                      }
+                                                      : null,
                                               style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(const Color(0xFF00973A)),
-                                                foregroundColor: MaterialStateProperty.all(Colors.white),
-                                                padding: MaterialStateProperty.all(
-                                                  const EdgeInsets.symmetric(vertical: 16),
-                                                ),
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                      const Color(0xFF00973A),
+                                                    ),
+                                                foregroundColor:
+                                                    MaterialStateProperty.all(
+                                                      Colors.white,
+                                                    ),
+                                                padding:
+                                                    MaterialStateProperty.all(
+                                                      const EdgeInsets.symmetric(
+                                                        vertical: 16,
+                                                      ),
+                                                    ),
                                                 shape: MaterialStateProperty.all(
                                                   RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
                                                   ),
                                                 ),
-                                                elevation: MaterialStateProperty.resolveWith<double>(
-                                                  (states) => states.contains(MaterialState.disabled) ? 0 : 4,
-                                                ),
-                                                shadowColor: MaterialStateProperty.all(
-                                                  Colors.grey.withOpacity(0.4),
-                                                ),
+                                                elevation:
+                                                    MaterialStateProperty.resolveWith<
+                                                      double
+                                                    >(
+                                                      (states) =>
+                                                          states.contains(
+                                                                MaterialState
+                                                                    .disabled,
+                                                              )
+                                                              ? 0
+                                                              : 4,
+                                                    ),
+                                                shadowColor:
+                                                    MaterialStateProperty.all(
+                                                      Colors.grey.withOpacity(
+                                                        0.4,
+                                                      ),
+                                                    ),
                                               ),
-                                              child: const Text("Tukar Sekarang"),
+                                              child: const Text(
+                                                "Tukar Sekarang",
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -187,48 +246,75 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
               const SizedBox(height: 12),
               const Text(
                 "♻️ Sampah Kertas yang Bisa Didaur Ulang: Lebih dari Sekadar Lembaran Usang!",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
             ],
           ),
         ),
         const SizedBox(height: 12),
-        _buildCard(const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Daur Ulang Kertas: Mudah & Berdampak!",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 5),
-            Text("Kertas yang Bisa Didaur Ulang",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 12),
-            Text("• HVS / Kertas Kantor\n  Lepas penjepit & plastik\n• Koran\n  Jadi kertas daur ulang, pembungkus\n• Majalah & Buku\n  Donasi jika layak, daur ulang jika rusak\n  (asal tidak dilaminasi)\n• Karton Tipis\n  Contoh: kotak sereal, kemasan pasta\n  gigi"),
-            SizedBox(height: 12),
-            Text("Yang Tidak Bisa Didaur Ulang",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            Text("• Kertas berminyak (nasi bungkus, pizza\n  box)\n• Tisu bekas\n• Kertas laminasi\n• Kertas karbon"),
-           
-           
-          ],
-        )),
+        _buildCard(
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Daur Ulang Kertas: Mudah & Berdampak!",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              SizedBox(height: 5),
+              Text(
+                "Kertas yang Bisa Didaur Ulang",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              SizedBox(height: 12),
+              Text(
+                "• HVS / Kertas Kantor\n  Lepas penjepit & plastik\n• Koran\n  Jadi kertas daur ulang, pembungkus\n• Majalah & Buku\n  Donasi jika layak, daur ulang jika rusak\n  (asal tidak dilaminasi)\n• Karton Tipis\n  Contoh: kotak sereal, kemasan pasta\n  gigi",
+                style: TextStyle(fontSize: 13),
+              ),
+              SizedBox(height: 12),
+              Text(
+                "Yang Tidak Bisa Didaur Ulang",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              Text(
+                "• Kertas berminyak (nasi bungkus, pizza\n  box)\n• Tisu bekas\n• Kertas laminasi\n• Kertas karbon",
+                style: TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 12),
-        _buildCard(const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Cara Simpan Kertas Daur Ulang",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            Text("• Pisahkan jenisnya\n• Jangan dilipat/robek terlalu kecil\n• Simpan di tempat kering\n• Jangan campur sampah basah"),
-          ],
-        )),
+        _buildCard(
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Cara Simpan Kertas Daur Ulang",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+              Text(
+                "• Pisahkan jenisnya\n• Jangan dilipat/robek terlalu kecil\n• Simpan di tempat kering\n• Jangan campur sampah basah",
+                style: TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 12),
-        _buildCard(const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Jangan buang kertas sembarangan! Tukar mulai Rp1.500/kg dan bantu bumi!"),
-            SizedBox(height: 10),
-            Text("Yuk, Tukarkan Sekarang!", style: TextStyle(fontWeight: FontWeight.bold)),          
-          ],
-        )),
+        _buildCard(
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Jangan buang kertas sembarangan! Tukar mulai Rp1.500/kg dan bantu bumi!",
+                style: TextStyle(fontSize: 13),
+              ),
+              SizedBox(height: 10),
+              Text(
+                "Yuk, Tukarkan Sekarang!",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
@@ -239,10 +325,7 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
       child: Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 3,
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: child,
-        ),
+        child: Padding(padding: const EdgeInsets.all(16), child: child),
       ),
     );
   }
@@ -284,10 +367,11 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
                     child: Image.asset(
                       imagePath,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.error, color: Colors.red),
-                      ),
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.error, color: Colors.red),
+                          ),
                     ),
                   ),
                   Expanded(
@@ -300,7 +384,9 @@ class _KertasDetailPageState extends State<KertasDetailPage> {
                           Text(
                             nama,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(alamat, style: const TextStyle(fontSize: 12)),

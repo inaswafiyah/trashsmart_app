@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:trashsmart/pages/welcome.dart'; // Halaman WelcomePage
+import 'package:trashsmart/pages/welcome.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -17,17 +17,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'image': 'assets/images/onboard1.png',
       'title': 'Selamat datang di Trashsmart',
-      'desc': '“Bersama kita wujudkan dunia yang lebih\nbersih dan berkelanjutan."',
+      'desc':
+          '“Bersama kita wujudkan dunia yang lebih\nbersih dan berkelanjutan."',
     },
     {
       'image': 'assets/images/onboard2.png',
       'title': 'Jadilah bagian dari perubahan!',
-      'desc': 'Temukan cara mudah untuk mendaur ulang, mengurangi limbah, dan mendukung\nlingkungan.',
+      'desc':
+          'Temukan cara mudah untuk mendaur ulang, mengurangi limbah, dan mendukung\nlingkungan.',
     },
     {
       'image': 'assets/images/onboard3.png',
       'title': 'Bersama kita membuat dampak nyata!',
-      'desc': 'Mulai dari langkah kecil, Wujudkan perubahan.\nSetor sampah makin mudah dengan fitur drop-off!',
+      'desc':
+          'Mulai dari langkah kecil, Wujudkan perubahan.\nSetor sampah makin mudah dengan fitur drop-off!',
     },
   ];
 
@@ -38,15 +41,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         curve: Curves.ease,
       );
     } else {
-      // Simpan status telah melihat Onboarding
       SharedPreferences.getInstance().then((prefs) {
-        prefs.setBool('hasSeenOnboarding', true);  // Menyimpan status
+        prefs.setBool('hasSeenOnboarding', true);
       });
 
-      // Arahkan ke halaman WelcomePage setelah Onboarding selesai
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const WelcomePage()), // Ganti dengan halaman welcome
+        MaterialPageRoute(builder: (context) => const WelcomePage()),
       );
     }
   }
@@ -77,7 +78,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemBuilder: (context, index) {
                   final item = onboardingData[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0), // lebih kecil dari 24
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -86,7 +87,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         Text(
                           item['title']!,
                           style: const TextStyle(
-                            fontSize: 15, // lebih kecil agar muat
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF062F0B),
                           ),
@@ -117,9 +118,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   height: 8,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: _currentIndex == index
-                        ? const Color(0xFFFFD600)
-                        : const Color(0xFFD6D6D6),
+                    color:
+                        _currentIndex == index
+                            ? const Color(0xFFFFD600)
+                            : const Color(0xFFD6D6D6),
                   ),
                 );
               }),
@@ -140,7 +142,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           shape: BoxShape.circle,
                           color: Color(0xFF207A3E),
                         ),
-                        child: const Icon(Icons.arrow_back, size: 20, color: Color(0xFFD6D6D6)),
+                        child: const Icon(
+                          Icons.arrow_back,
+                          size: 20,
+                          color: Color(0xFFD6D6D6),
+                        ),
                       ),
                     )
                   else
@@ -152,11 +158,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 12,
+                      ),
                       textStyle: const TextStyle(fontSize: 14),
                     ),
                     child: Text(
-                      _currentIndex == onboardingData.length - 1 ? 'Mulai' : 'Lanjut',
+                      _currentIndex == onboardingData.length - 1
+                          ? 'Mulai'
+                          : 'Lanjut',
                       style: const TextStyle(color: Colors.white),
                     ),
                   ),

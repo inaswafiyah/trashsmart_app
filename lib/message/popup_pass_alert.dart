@@ -28,22 +28,24 @@ void showExitConfirmationPassword(BuildContext context) {
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(dialogContext),
                     style: OutlinedButton.styleFrom(
-                      side: const BorderSide(color:  Color(0xFF00973A)),
+                      side: const BorderSide(color: Color(0xFF00973A)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     child: const Text(
                       'Batal',
                       style: TextStyle(
-                          color: const Color(0xFF00973A),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16),
+                        color: const Color(0xFF00973A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 20),
-               Expanded(
+                Expanded(
                   child: ElevatedButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -52,11 +54,17 @@ void showExitConfirmationPassword(BuildContext context) {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF00973A),
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                     child: Text(
                       'Keluar',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),

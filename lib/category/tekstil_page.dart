@@ -22,7 +22,10 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
       create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Informasi Kategori"),
+          title: const Text(
+            "Informasi Kategori",
+            style: TextStyle(fontSize: 18),
+          ),
           centerTitle: true,
           backgroundColor: const Color(0xFF00973A),
           foregroundColor: Colors.white,
@@ -43,7 +46,9 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                               const Text(
                                 "Tekstil",
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               const SizedBox(height: 16),
                               _buildArtikel(),
@@ -52,7 +57,6 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                           ),
                         ),
 
-                        // Divider
                         Container(
                           width: double.infinity,
                           height: 2,
@@ -73,8 +77,9 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                                   child: Text(
                                     "Pilih Bank Sampah Kami",
                                     style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 12),
@@ -82,29 +87,41 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                                   builder: (context, state) {
                                     if (state.isLoading) {
                                       return const Center(
-                                          child: CircularProgressIndicator());
+                                        child: CircularProgressIndicator(),
+                                      );
                                     }
                                     if (state.errorMessage != null) {
                                       return Center(
-                                          child: Text('Error: ${state.errorMessage}'));
+                                        child: Text(
+                                          'Error: ${state.errorMessage}',
+                                        ),
+                                      );
                                     }
                                     final bankList = state.bankList;
                                     if (bankList.isEmpty) {
                                       return const Center(
-                                          child: Text('Belum ada data bank sampah.'));
+                                        child: Text(
+                                          'Belum ada data bank sampah.',
+                                        ),
+                                      );
                                     }
                                     return Column(
                                       children: [
-                                        ...List.generate(bankList.length, (index) {
+                                        ...List.generate(bankList.length, (
+                                          index,
+                                        ) {
                                           final bank = bankList[index];
                                           return Padding(
-                                            padding:
-                                                const EdgeInsets.only(bottom: 12),
+                                            padding: const EdgeInsets.only(
+                                              bottom: 12,
+                                            ),
                                             child: _buildBankSampahItem(
                                               index: index,
                                               nama: bank.bankSampahNama ?? '-',
-                                              alamat: bank.bankSampahAlamat ?? '-',
-                                              imagePath: "assets/images/map.png",
+                                              alamat:
+                                                  bank.bankSampahAlamat ?? '-',
+                                              imagePath:
+                                                  "assets/images/map.png",
                                             ),
                                           );
                                         }),
@@ -112,48 +129,72 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                                         SizedBox(
                                           width: double.infinity,
                                           child: ElevatedButton(
-                                            onPressed: selectedBankIndex != null
-                                                ? () {
-                                                    final selectedBank = bankList[selectedBankIndex!];
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => FormPage(
-                                                          kategoriTerpilih: 'Tekstil',
-                                                          bankSampahNama: selectedBank.bankSampahNama ?? '-',
-                                                          bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                            onPressed:
+                                                selectedBankIndex != null
+                                                    ? () {
+                                                      final selectedBank =
+                                                          bankList[selectedBankIndex!];
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder:
+                                                              (
+                                                                context,
+                                                              ) => FormPage(
+                                                                kategoriTerpilih:
+                                                                    'Tekstil',
+                                                                bankSampahNama:
+                                                                    selectedBank
+                                                                        .bankSampahNama ??
+                                                                    '-',
+                                                                bankSampahAlamat:
+                                                                    selectedBank
+                                                                        .bankSampahAlamat ??
+                                                                    '-',
+                                                              ),
                                                         ),
-                                                      ),
-                                                    );
-                                                  }
-                                                : null,
+                                                      );
+                                                    }
+                                                    : null,
                                             style: ButtonStyle(
                                               backgroundColor:
                                                   MaterialStateProperty.all(
-                                                      const Color(0xFF00973A)),
+                                                    const Color(0xFF00973A),
+                                                  ),
                                               foregroundColor:
                                                   MaterialStateProperty.all(
-                                                      Colors.white),
-                                              padding: MaterialStateProperty.all(
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 16),
-                                              ),
+                                                    Colors.white,
+                                                  ),
+                                              padding:
+                                                  MaterialStateProperty.all(
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                    ),
+                                                  ),
                                               shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                 ),
                                               ),
-                                              elevation: MaterialStateProperty
-                                                  .resolveWith<double>(
-                                                (states) => states.contains(
-                                                        MaterialState.disabled)
-                                                    ? 0
-                                                    : 4,
-                                              ),
-                                              shadowColor: MaterialStateProperty.all(
-                                                Colors.grey.withOpacity(0.4),
-                                              ),
+                                              elevation:
+                                                  MaterialStateProperty.resolveWith<
+                                                    double
+                                                  >(
+                                                    (states) =>
+                                                        states.contains(
+                                                              MaterialState
+                                                                  .disabled,
+                                                            )
+                                                            ? 0
+                                                            : 4,
+                                                  ),
+                                              shadowColor:
+                                                  MaterialStateProperty.all(
+                                                    Colors.grey.withOpacity(
+                                                      0.4,
+                                                    ),
+                                                  ),
                                             ),
                                             child: const Text("Tukar Sekarang"),
                                           ),
@@ -184,14 +225,17 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
       children: [
         Card(
           elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
               ClipRRect(
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    topRight: Radius.circular(12)),
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
                 child: Image(
                   image: AssetImage('assets/kategori/tekstill.png'),
                   width: double.infinity,
@@ -203,49 +247,96 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                 padding: EdgeInsets.all(16),
                 child: Text(
                   "♻️ Sampah Tekstil: Ubah Baju Lama Jadi Peluang Baru!",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text(
-            "Daur Ulang Sampah Tekstil: Hemat & Kreatif!",
-          ),
-          SizedBox(height: 8),
-          Text("Yang Bisa Didaur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold),),
-          Text("• Pakaian layak pakai: bisa didonasi,\n  dijual,atau diubah jadi produk baru"),
-          Text("• Kain perca: cocok untuk kerajinan (tas,\n  boneka, dompet)"),
-          Text("• Seprai, handuk, gorden lama: bisa jadi\n  keset, lap pel"),
-          Text("• Pakaian rusak: bisa jadi isi bantal,\n  bahan isolasi, atau bangunan"),
-          SizedBox(height: 8),
-          Text("Yang Sulit Didaur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Text("• Terkena bahan kimia"),
-          Text("• Sangat kotor atau berjamur"),
-          Text("• Campur logam/plastik yang sulit\n  dipisah"),
-        ]),
-        const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Cara Mengelola:",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 8),
-          Text("• Pisahkan yang masih bagus\n  → donasi/preloved"),
-          Text("• Yang rusak → drop-off ke bank\n  sampah"),
-          Text("• Potong jadi lap, isian boneka, dll"),
-          Text("• Simpan dalam kondisi bersih & kering"),
-        ]),
-        const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Satu kilo tekstil = Rp2.500! Yuk, bersihkan lemari sambil bantu lingkungan.",
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Daur Ulang Sampah Tekstil: Hemat & Kreatif!",
+              style: TextStyle(fontSize: 13),
             ),
-          SizedBox(height: 8),
-          Text("Yuk, Tukarkan Sekarang!",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-        ]),
+            SizedBox(height: 8),
+            Text(
+              "Yang Bisa Didaur Ulang",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            Text(
+              "• Pakaian layak pakai: bisa didonasi,\n  dijual,atau diubah jadi produk baru",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Kain perca: cocok untuk kerajinan (tas,\n  boneka, dompet)",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Seprai, handuk, gorden lama: bisa jadi\n  keset, lap pel",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Pakaian rusak: bisa jadi isi bantal,\n  bahan isolasi, atau bangunan",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Yang Sulit Didaur Ulang",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            Text("• Terkena bahan kimia", style: TextStyle(fontSize: 13)),
+            Text(
+              "• Sangat kotor atau berjamur",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Campur logam/plastik yang sulit\n  dipisah",
+              style: TextStyle(fontSize: 13),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Cara Mengelola:",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "• Pisahkan yang masih bagus\n  → donasi/preloved",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Yang rusak → drop-off ke bank\n  sampah",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Potong jadi lap, isian boneka, dll",
+              style: TextStyle(fontSize: 13),
+            ),
+            Text(
+              "• Simpan dalam kondisi bersih & kering",
+              style: TextStyle(fontSize: 13),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Satu kilo tekstil = Rp2.500! Yuk, bersihkan lemari sambil bantu lingkungan.",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "Yuk, Tukarkan Sekarang!",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -302,11 +393,11 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                     child: Image.asset(
                       imagePath,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Container(
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.error, color: Colors.red),
-                      ),
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.error, color: Colors.red),
+                          ),
                     ),
                   ),
                   Expanded(
@@ -319,11 +410,12 @@ class _TekstilDetailPageState extends State<TekstilDetailPage> {
                           Text(
                             nama,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                           ),
                           const SizedBox(height: 4),
-                          Text(alamat,
-                              style: const TextStyle(fontSize: 12)),
+                          Text(alamat, style: const TextStyle(fontSize: 12)),
                         ],
                       ),
                     ),

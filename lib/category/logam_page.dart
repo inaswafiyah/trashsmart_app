@@ -22,7 +22,10 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
       create: (_) => BankBloc(BankRemoteDataSource())..add(LoadBankSampah()),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Informasi Kategori"),
+          title: const Text(
+            "Informasi Kategori",
+            style: TextStyle(fontSize: 18),
+          ),
           centerTitle: true,
           backgroundColor: const Color(0xFF00973A),
           foregroundColor: Colors.white,
@@ -43,7 +46,9 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
                               const Text(
                                 "LOGAM",
                                 style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               const SizedBox(height: 16),
                               _buildArtikel(),
@@ -69,81 +74,135 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
                                   child: Text(
                                     "Pilih Bank Sampah Kami",
                                     style: TextStyle(
-                                        fontSize: 16, fontWeight: FontWeight.bold),
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 12),
                                 BlocBuilder<BankBloc, BankState>(
                                   builder: (context, state) {
                                     if (state.isLoading) {
-                                      return const Center(child: CircularProgressIndicator());
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
                                     }
                                     if (state.errorMessage != null) {
-                                      return Center(child: Text('Error: ${state.errorMessage}'));
+                                      return Center(
+                                        child: Text(
+                                          'Error: ${state.errorMessage}',
+                                        ),
+                                      );
                                     }
                                     final bankList = state.bankList;
                                     if (bankList.isEmpty) {
-                                      return const Center(child: Text('Belum ada data bank sampah.'));
+                                      return const Center(
+                                        child: Text(
+                                          'Belum ada data bank sampah.',
+                                        ),
+                                      );
                                     }
                                     return Column(
                                       children: [
-                                        ...List.generate(bankList.length, (index) {
+                                        ...List.generate(bankList.length, (
+                                          index,
+                                        ) {
                                           final bank = bankList[index];
                                           return Column(
                                             children: [
                                               _buildBankSampahItem(
                                                 index: index,
-                                                nama: bank.bankSampahNama ?? '-',
-                                                alamat: bank.bankSampahAlamat ?? '-',
-                                                imagePath: "assets/images/map.png",
+                                                nama:
+                                                    bank.bankSampahNama ?? '-',
+                                                alamat:
+                                                    bank.bankSampahAlamat ??
+                                                    '-',
+                                                imagePath:
+                                                    "assets/images/map.png",
                                               ),
                                               const SizedBox(height: 12),
                                             ],
                                           );
                                         }),
                                         Padding(
-                                          padding: const EdgeInsets.only(bottom: 24),
+                                          padding: const EdgeInsets.only(
+                                            bottom: 24,
+                                          ),
                                           child: SizedBox(
                                             width: double.infinity,
                                             child: ElevatedButton(
-                                              onPressed: selectedBankIndex != null
-                                                  ? () {
-                                                      final selectedBank = bankList[selectedBankIndex!];
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) => FormPage(
-                                                            kategoriTerpilih: "Logam",
-                                                            bankSampahNama: selectedBank.bankSampahNama ?? '-',
-                                                            bankSampahAlamat: selectedBank.bankSampahAlamat ?? '-',
+                                              onPressed:
+                                                  selectedBankIndex != null
+                                                      ? () {
+                                                        final selectedBank =
+                                                            bankList[selectedBankIndex!];
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder:
+                                                                (
+                                                                  context,
+                                                                ) => FormPage(
+                                                                  kategoriTerpilih:
+                                                                      "Logam",
+                                                                  bankSampahNama:
+                                                                      selectedBank
+                                                                          .bankSampahNama ??
+                                                                      '-',
+                                                                  bankSampahAlamat:
+                                                                      selectedBank
+                                                                          .bankSampahAlamat ??
+                                                                      '-',
+                                                                ),
                                                           ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  : null,
+                                                        );
+                                                      }
+                                                      : null,
                                               style: ButtonStyle(
                                                 backgroundColor:
-                                                    MaterialStateProperty.all(const Color(0xFF00973A)),
+                                                    MaterialStateProperty.all(
+                                                      const Color(0xFF00973A),
+                                                    ),
                                                 foregroundColor:
-                                                    MaterialStateProperty.all(Colors.white),
-                                                padding: MaterialStateProperty.all(
-                                                  const EdgeInsets.symmetric(vertical: 16),
-                                                ),
+                                                    MaterialStateProperty.all(
+                                                      Colors.white,
+                                                    ),
+                                                padding:
+                                                    MaterialStateProperty.all(
+                                                      const EdgeInsets.symmetric(
+                                                        vertical: 16,
+                                                      ),
+                                                    ),
                                                 shape: MaterialStateProperty.all(
                                                   RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
                                                   ),
                                                 ),
                                                 elevation:
-                                                    MaterialStateProperty.resolveWith<double>(
-                                                  (states) =>
-                                                      states.contains(MaterialState.disabled) ? 0 : 4,
-                                                ),
-                                                shadowColor: MaterialStateProperty.all(
-                                                  Colors.grey.withOpacity(0.4),
-                                                ),
+                                                    MaterialStateProperty.resolveWith<
+                                                      double
+                                                    >(
+                                                      (states) =>
+                                                          states.contains(
+                                                                MaterialState
+                                                                    .disabled,
+                                                              )
+                                                              ? 0
+                                                              : 4,
+                                                    ),
+                                                shadowColor:
+                                                    MaterialStateProperty.all(
+                                                      Colors.grey.withOpacity(
+                                                        0.4,
+                                                      ),
+                                                    ),
                                               ),
-                                              child: const Text("Tukar Sekarang"),
+                                              child: const Text(
+                                                "Tukar Sekarang",
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -172,14 +231,17 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
       children: [
         Card(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
                 child: Image.asset(
                   "assets/kategori/logamm.png",
                   width: double.infinity,
@@ -191,52 +253,81 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
                 padding: EdgeInsets.all(16),
                 child: Text(
                   "♻️ Sampah Logam yang Bisa Didaur Ulang: Harta Karun dari Barang Bekas!",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ),
             ],
           ),
         ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text(
-            "Daur Ulang Logam: Bernilai & Ramah Lingkungan!",
-          ),
-          SizedBox(height: 5),
-          Text("Logam yang Bisa Didaur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          SizedBox(height: 12),
-          Text(
-              "1. Aluminium\n    Contoh: kaleng minuman, foil, tutup\n    botol Jadi: kaleng baru, rangka\n    sepeda, suku cadang"),
-          SizedBox(height: 6),
-          Text(
-              "2. Besi & Baja\n    Contoh: kaleng makanan, paku, alat\n    bekas Jadi: bahan bangunan, pipa,\n    alat rumah tangga"),
-          SizedBox(height: 6),
-          Text(
-              "3. Tembaga\n    Contoh: kabel, pipa, komponen\n    elektronik Jadi: kabel & komponen\n   baru"),
-          SizedBox(height: 10),
-          Text("Yang Sulit Didaur Ulang",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(
-              "• Logam campur plastik/karet\n• Logam kecil banget/berkarat\n• Kaleng cat bekas (mengandung bahan\n  kimia)"),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Daur Ulang Logam: Bernilai & Ramah Lingkungan!",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 5),
+            Text(
+              "Logam yang Bisa Didaur Ulang",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            SizedBox(height: 12),
+            Text(
+              "1. Aluminium\n    Contoh: kaleng minuman, foil, tutup\n    botol Jadi: kaleng baru, rangka\n    sepeda, suku cadang",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 6),
+            Text(
+              "2. Besi & Baja\n    Contoh: kaleng makanan, paku, alat\n    bekas Jadi: bahan bangunan, pipa,\n    alat rumah tangga",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 6),
+            Text(
+              "3. Tembaga\n    Contoh: kabel, pipa, komponen\n    elektronik Jadi: kabel & komponen\n    baru",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Yang Sulit Didaur Ulang",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            Text(
+              "• Logam campur plastik/karet\n• Logam kecil banget/berkarat\n• Kaleng cat bekas (mengandung bahan\n  kimia)",
+              style: TextStyle(fontSize: 13),
+            ),
+          ],
+        ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Tips Menyimpan Sampah Logam",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-          Text(
-              "• Cuci bersih dari sisa makanan/\n  minuman\n• Lepas label plastik\n• Simpan di tempat kering\n• Kelompokkan jika jumlah banyak"),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Tips Menyimpan Sampah Logam",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+            ),
+            Text(
+              "• Cuci bersih dari sisa makanan/\n  minuman\n• Lepas label plastik\n• Simpan di tempat kering\n• Kelompokkan jika jumlah banyak",
+              style: TextStyle(fontSize: 13),
+            ),
+          ],
+        ),
         const SizedBox(height: 12),
-        _buildCardArtikel(children: const [
-          Text("Logammu Bernilai Tinggi! Mulai dari Rp5.000/kg — donasikan dan raih manfaatnya!"),
-          SizedBox(height: 10),
-          Text("Yuk, Tukarkan Sekarang!",
-              style: TextStyle(fontWeight: FontWeight.bold)),
-        ]),
+        _buildCardArtikel(
+          children: const [
+            Text(
+              "Logammu Bernilai Tinggi! Mulai dari Rp5.000/kg — donasikan dan raih manfaatnya!",
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(height: 10),
+            Text(
+              "Yuk, Tukarkan Sekarang!",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+          ],
+        ),
       ],
     );
   }
+
   Widget _buildCardArtikel({required List<Widget> children}) {
     return Card(
       elevation: 2,
@@ -289,10 +380,11 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
                     child: Image.asset(
                       imagePath,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.error, color: Colors.red),
-                      ),
+                      errorBuilder:
+                          (context, error, stackTrace) => Container(
+                            color: Colors.grey[300],
+                            child: const Icon(Icons.error, color: Colors.red),
+                          ),
                     ),
                   ),
                   Expanded(
@@ -305,7 +397,9 @@ class _LogamDetailPageState extends State<LogamDetailPage> {
                           Text(
                             nama,
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(alamat, style: const TextStyle(fontSize: 12)),

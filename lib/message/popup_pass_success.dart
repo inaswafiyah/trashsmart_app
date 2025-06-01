@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trashsmart/widget/profile.dart'; // sesuaikan path import ini
+import 'package:trashsmart/widget/profile.dart';
 
 Future<void> PopSuccessPassword(BuildContext context) {
   return showDialog(
@@ -25,17 +25,19 @@ Future<void> PopSuccessPassword(BuildContext context) {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Kata sandi telah diperbarui.\nSilakan gunakan kata sandi \nbaru saat login berikutnya.',
-                style: TextStyle(fontSize: 16),
+                'Kata sandi telah diperbarui. Silakan\ngunakan kata sandi baru saat login\nberikutnya.',
+                style: TextStyle(fontSize: 13),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.pop(contextDialog); // tutup dialog
+                  Navigator.pop(contextDialog);
                   Navigator.pushAndRemoveUntil(
                     contextDialog,
-                    MaterialPageRoute(builder: (context) => const ProfilePages()),
+                    MaterialPageRoute(
+                      builder: (context) => const ProfilePages(),
+                    ),
                     (route) => false,
                   );
                 },

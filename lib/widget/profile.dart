@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trashsmart/message/popup_logout.dart';
 import 'package:trashsmart/data/model/response/auth_response_model.dart';
-import 'package:trashsmart/profile/riwayat_penukaran.dart';
+import 'package:trashsmart/riwayat_resi/riwayat_penukaran.dart';
 import 'package:trashsmart/widget/edit_password.dart';
 import 'package:trashsmart/widget/edit_profile.dart';
 import 'package:http/http.dart' as http;
@@ -31,10 +31,14 @@ class _ProfilePagesState extends State<ProfilePages> {
   }
 
   Future<void> _initProfile() async {
-    setState(() { isLoadingProfile = true; });
+    setState(() {
+      isLoadingProfile = true;
+    });
     await _loadUserData();
     await _fetchAvatars();
-    setState(() { isLoadingProfile = false; });
+    setState(() {
+      isLoadingProfile = false;
+    });
   }
 
   Future<void> _loadUserData() async {
@@ -57,7 +61,7 @@ class _ProfilePagesState extends State<ProfilePages> {
         Uri.parse('${Variable.baseUrl}/api/avatars'),
         headers: {
           'Authorization': 'Bearer $token',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
         },
       );
 
@@ -72,7 +76,6 @@ class _ProfilePagesState extends State<ProfilePages> {
     }
   }
 
-  // Widget loading custom
   Widget customLoadingWidget() {
     return const Center(
       child: SizedBox(
@@ -100,24 +103,32 @@ class _ProfilePagesState extends State<ProfilePages> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text("Choose Your Fighter!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const Text(
+                    "Choose Your Fighter!",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(height: 16),
-                  if (isAvatarLoading)
-                    customLoadingWidget(), // Loading avatar
+                  if (isAvatarLoading) customLoadingWidget(),
                   if (!isAvatarLoading)
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: List.generate(_avatars.length, (index) {
                           final avatar = _avatars[index];
-                          final path = '${Variable.baseUrl}/${avatar['image_path']}';
+                          final path =
+                              '${Variable.baseUrl}/${avatar['image_path']}';
                           return GestureDetector(
                             onTap: () async {
-                              setModalState(() { isAvatarLoading = true; });
-                              final pref = await SharedPreferences.getInstance();
+                              setModalState(() {
+                                isAvatarLoading = true;
+                              });
+                              final pref =
+                                  await SharedPreferences.getInstance();
                               final token = pref.getString('token');
                               final response = await http.post(
-                                Uri.parse('${Variable.baseUrl}/api/update-avatar'),
+                                Uri.parse(
+                                  '${Variable.baseUrl}/api/update-avatar',
+                                ),
                                 headers: {
                                   'Authorization': 'Bearer $token',
                                   'Content-Type': 'application/json',
@@ -125,22 +136,34 @@ class _ProfilePagesState extends State<ProfilePages> {
                                 body: jsonEncode({'avatar_id': avatar['id']}),
                               );
                               if (response.statusCode == 200) {
-                                final userData = jsonDecode(response.body)['user'];
-                                final newAvatarPath = userData['avatar']['image_path'];
-                                final newAvatarUrl = '${Variable.baseUrl}/$newAvatarPath';
-                                await pref.setString('avatar_url', newAvatarUrl);
+                                final userData =
+                                    jsonDecode(response.body)['user'];
+                                final newAvatarPath =
+                                    userData['avatar']['image_path'];
+                                final newAvatarUrl =
+                                    '${Variable.baseUrl}/$newAvatarPath';
+                                await pref.setString(
+                                  'avatar_url',
+                                  newAvatarUrl,
+                                );
                                 final authData = pref.getString('auth_data');
                                 if (authData != null) {
                                   final authJson = jsonDecode(authData);
-                                  authJson['user']['avatar'] = userData['avatar'];
-                                  await pref.setString('auth_data', jsonEncode(authJson));
+                                  authJson['user']['avatar'] =
+                                      userData['avatar'];
+                                  await pref.setString(
+                                    'auth_data',
+                                    jsonEncode(authJson),
+                                  );
                                 }
                                 setState(() {
                                   _avatarUrl = newAvatarUrl;
                                   _selectedAvatar = avatar['id'];
                                 });
                               }
-                              setModalState(() { isAvatarLoading = false; });
+                              setModalState(() {
+                                isAvatarLoading = false;
+                              });
                               Navigator.pop(context);
                             },
                             child: Container(
@@ -148,7 +171,13 @@ class _ProfilePagesState extends State<ProfilePages> {
                               padding: const EdgeInsets.all(3),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                border: avatar['id'] == _selectedAvatar ? Border.all(color: Color(0xFF00973A), width: 3) : null,
+                                border:
+                                    avatar['id'] == _selectedAvatar
+                                        ? Border.all(
+                                          color: Color(0xFF00973A),
+                                          width: 3,
+                                        )
+                                        : null,
                               ),
                               child: CircleAvatar(
                                 radius: 32,
@@ -177,7 +206,8 @@ class _ProfilePagesState extends State<ProfilePages> {
       );
     }
 
-    final userInitial = _username?.isNotEmpty == true ? _username![0].toUpperCase() : '';
+    final userInitial =
+        _username?.isNotEmpty == true ? _username![0].toUpperCase() : '';
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -196,36 +226,36 @@ class _ProfilePagesState extends State<ProfilePages> {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.grey.shade300,
-                child: _avatarUrl != null
-                    ? ClipOval(
-                        child: Image.network(
-                          _avatarUrl!,
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            // Jika gagal load gambar, tampilkan inisial user
-                            return Center(
-                              child: Text(
-                                userInitial,
-                                style: const TextStyle(
-                                  fontSize: 40,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                child:
+                    _avatarUrl != null
+                        ? ClipOval(
+                          child: Image.network(
+                            _avatarUrl!,
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Center(
+                                child: Text(
+                                  userInitial,
+                                  style: const TextStyle(
+                                    fontSize: 40,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
+                        )
+                        : Text(
+                          userInitial,
+                          style: const TextStyle(
+                            fontSize: 40,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      )
-                    : Text(
-                        userInitial,
-                        style: const TextStyle(
-                          fontSize: 40,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
               ),
               Positioned(
                 bottom: 0,
@@ -235,7 +265,11 @@ class _ProfilePagesState extends State<ProfilePages> {
                   child: const CircleAvatar(
                     radius: 14,
                     backgroundColor: Color(0xFF00973A),
-                    child: Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                    child: Icon(
+                      Icons.camera_alt,
+                      size: 16,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -244,10 +278,7 @@ class _ProfilePagesState extends State<ProfilePages> {
           const SizedBox(height: 10),
           Text(
             _username ?? 'Nama Pengguna',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 50),
           Padding(
@@ -262,7 +293,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                       context,
                       MaterialPageRoute(builder: (_) => EditProfilePage()),
                     ).then((_) {
-                      _initProfile(); // Refresh data profile setelah kembali dari edit
+                      _initProfile();
                     });
                   },
                 ),
@@ -286,7 +317,9 @@ class _ProfilePagesState extends State<ProfilePages> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => RiwayatPenukaranPage(riwayatList: riwayatList),
+                        builder:
+                            (_) =>
+                                RiwayatPenukaranPage(riwayatList: riwayatList),
                       ),
                     );
                   },
@@ -318,7 +351,10 @@ class _ProfilePagesState extends State<ProfilePages> {
                 height: 20,
                 color: Colors.red,
               ),
-              label: const Text('Keluar', style: TextStyle(fontWeight: FontWeight.bold),),
+              label: const Text(
+                'Keluar',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           const SizedBox(height: 20),

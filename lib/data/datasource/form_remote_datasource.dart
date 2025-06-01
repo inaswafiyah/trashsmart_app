@@ -4,10 +4,10 @@ import 'package:http/http.dart' as http;
 class FormRemoteDatasource {
   final String baseUrl;
   final http.Client client;
-  final String? token; // token auth
+  final String? token;
 
   FormRemoteDatasource({required this.baseUrl, this.token, http.Client? client})
-      : client = client ?? http.Client();
+    : client = client ?? http.Client();
 
   Future<String> submitForm(Map<String, dynamic> formData) async {
     final response = await client.post(

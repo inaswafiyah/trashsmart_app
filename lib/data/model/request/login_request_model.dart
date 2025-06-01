@@ -4,10 +4,7 @@ class LoginRequestModel {
   final String email;
   final String password;
 
-  LoginRequestModel({
-    required this.email,
-    required this.password,
-  });
+  LoginRequestModel({required this.email, required this.password});
 
   factory LoginRequestModel.fromJson(String str) =>
       LoginRequestModel.fromMap(json.decode(str));
@@ -15,13 +12,7 @@ class LoginRequestModel {
   String toJson() => json.encode(toMap());
 
   factory LoginRequestModel.fromMap(Map<String, dynamic> json) =>
-      LoginRequestModel(
-        email: json["email"],
-        password: json["password"],
-      );
+      LoginRequestModel(email: json["email"], password: json["password"]);
 
-  Map<String, dynamic> toMap() => {
-        "email": email,
-        "password": password,
-      };
+  Map<String, dynamic> toMap() => {"email": email, "password": password};
 }

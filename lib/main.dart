@@ -7,21 +7,19 @@ import 'package:trashsmart/presentation/auth/bloc/register/register_bloc.dart';
 import 'package:trashsmart/presentation/auth/pages/splash_screen.dart';
 
 void main() async {
-   WidgetsFlutterBinding.ensureInitialized();
-   await Firebase.initializeApp();
-  runApp(MultiBlocProvider(
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(
+    MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => LoginBloc(AuthRemoteDatasource())),
         BlocProvider(
-          create: (context) => LoginBloc(AuthRemoteDatasource()),
-        ),
-        BlocProvider(
-          create: (_) => RegisterBloc(
-            authDatasource: AuthRemoteDatasource(),
-          ),
+          create: (_) => RegisterBloc(authDatasource: AuthRemoteDatasource()),
         ),
       ],
-      child: MyApp()),
-      );
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -29,15 +27,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return 
-        MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'TrashSmart',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        home: const SplashScreen(),
-      );
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'TrashSmart',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const SplashScreen(),
+    );
   }
 }
